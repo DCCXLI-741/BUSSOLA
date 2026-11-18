@@ -714,7 +714,7 @@ function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");cl
 // degli altri utenti record per record (vince la modifica più recente), poi il file viene riscritto.
 const ARR=["units","pfields","sheets","people","entries","users"],CFG=["madre","warn","folder","gradi"];
 let FH=null,RO=false,ME_ID=null,BASE=null,syncing=false,syncAgain=false,dirty=false,SYNC={c:"busy",t:""},SCOPE,lastAct=Date.now(),fails=0,lockUntil=0;
-const APP="GE.S.PER.",APPL="Gestione Scadenze del Personale",VER="3.7",VERDATE="18/11/2026",CREDIT=`realizzato da MIMMO.MOTRA · versione ${VER} del ${VERDATE}`;
+const APP="GE.S.PER.",APPL="Gestione Scadenze del Personale",VER="3.8",VERDATE="18/11/2026",CREDIT=`realizzato da MIMMO.MOTRA · versione ${VER} del ${VERDATE}`;
 const JTYPES=[{description:"Archivio GE.S.PER.",accept:{"application/json":[".json"]}}];
 const sigR=r=>JSON.stringify(r,(k,v)=>k==="_u"||k==="_by"?undefined:v);
 const sobj=o=>JSON.stringify(Object.keys(o||{}).sort().map(k=>[k,o[k]]));
@@ -1137,6 +1137,7 @@ function vAltro(){
     ${grp("Archivio",[FH&&FH.local?row('data-act="lexport"',"📤","#007AFF","Esporta una copia",dd==null?"Mai esportato":"Ultima: "+(dd===0?"oggi":dd===1?"ieri":dd+" giorni fa")):"",
       row('data-act="csv"',"📊","#34C759","Esporta per Excel"),row('data-act="rapios"',"📄","#8E8E93","Rapportino del giorno","PDF da condividere o stampare"),
       FH&&FH.local?row('data-act="gChange"',"📥","#5AC8FA","Importa un altro archivio","Sostituisce quello sul telefono"):""].filter(Boolean))}
+    ${grp("App",[row('data-act="appupd"',"🔄","#34C759","Aggiorna l'app","Versione installata: "+VER+" del "+VERDATE)])}
     ${grp("",[row('data-act="mypw"',"🔑","#FF9500","Cambia password"),row('data-act="logout"',"⎋","#FF3B30","Esci","","red")])}
     <p class="ifoot">${APP} ${esc(APPL)}<br>${esc(CREDIT)}</p></div>`;
 }
@@ -2708,6 +2709,7 @@ const ACT={
   pgo:d=>{S.ui.pg=S.ui.pg||{};S.ui.pg[d.pk]=Math.max(0,+d.p||0);saveUI();render()},
   rap:()=>IOS?rapShowIOS():printRap(),
   rapios:()=>rapShowIOS(),
+  appupd:async()=>{if(dirty)await sync(false);toast("Aggiorno…");setTimeout(appRefresh,300)},
   rapclose:()=>{const b=$("#rap");b.classList.remove("rapview");b.innerHTML="";document.body.classList.remove("rapopen")},
   rapshare:()=>rapShare(),
   vday:d=>{const T=todayISO(),c=S.ui.tday||T;S.ui.tday=+d.d?addDays(c,+d.d):"";if(S.ui.tday===T)S.ui.tday="";saveUI();render()},
@@ -2941,7 +2943,11 @@ setInterval(()=>{if(ME_ID&&!document.hidden)sync(true)},20000);
 window.addEventListener("focus",()=>{if(ME_ID)sync(true)});
 setInterval(()=>{if(ME_ID&&Date.now()-lastAct>30*60e3){if(dirty)sync(false);logout("Uscita automatica dopo 30 minuti di inattività.")}},60000);
 // app installata (iPhone): file dell'app disponibili anche senza rete
-if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register("sw.js").catch(()=>{});
+if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol)){
+  navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(reg=>{const up=()=>reg.update().catch(()=>{});document.addEventListener("visibilitychange",()=>{if(!document.hidden)up()});setInterval(up,30*60e3)}).catch(()=>{});
+}
+// «Aggiorna l'app»: butta via la copia salvata e ricarica dall'indirizzo internet
+async function appRefresh(){try{const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.unregister()));const ks=await caches.keys();await Promise.all(ks.filter(k=>k.startsWith("gesper")).map(k=>caches.delete(k)))}catch(e){}location.reload()}
 // avvio
 (async()=>{
   if(!window.isSecureContext||!(window.crypto&&crypto.subtle))return gate("nosupport");
