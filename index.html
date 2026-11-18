@@ -13,220 +13,325 @@
 <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <style>
-/* VOICE: minimal come le app di sistema dell'iPhone, poche parole, numeri grandi
-   IDEA: il piano del mese: ogni stipendio si divide in spese, investimento e contingenza
-   PICTURE: la barra a tre colori dello stipendio e la curva del patrimonio
-   COLOUR+TYPE: colori di sistema iOS (blu, verde, arancione) su sfondo raggruppato; font di sistema, Inter come riserva
-   LAYOUT: titoli grandi, liste raggruppate arrotondate, barra schede in basso, fogli dal basso */
+/* VOICE: minimal come le app di sistema dell'iPhone, numeri grandi, poche parole
+   IDEA: la bussola del patrimonio: dove sei, dove arrivi, quanto prima se cambi rotta
+   PICTURE: il grafico che scorri col dito, e il simulatore dove due curve si separano mentre muovi i cursori
+   COLOUR+TYPE: colori di sistema iOS su sfondo raggruppato; font di sistema
+   LAYOUT: titoli grandi, liste raggruppate, quattro schede in basso, fogli dal basso */
 :root{color-scheme:light dark;--bg:light-dark(#f2f2f7,#000);--card:light-dark(#fff,#1c1c1e);--ink:light-dark(#000,#fff);--mut:light-dark(#6c6c70,#98989f);
---sep:light-dark(rgba(60,60,67,.18),rgba(84,84,88,.6));--fill:light-dark(#e5e5ea,#2c2c2e);--blue:light-dark(#007aff,#0a84ff);--green:light-dark(#34c759,#30d158);--orange:light-dark(#ff9500,#ff9f0a);--red:light-dark(#ff3b30,#ff453a);--bar:light-dark(rgba(249,249,249,.88),rgba(22,22,24,.88))}
+--sep:light-dark(rgba(60,60,67,.18),rgba(84,84,88,.6));--fill:light-dark(#e5e5ea,#2c2c2e);--blue:light-dark(#007aff,#0a84ff);--green:light-dark(#34c759,#30d158);--orange:light-dark(#ff9500,#ff9f0a);--red:light-dark(#ff3b30,#ff453a);--gray:light-dark(#aeaeb2,#636366);--bar:light-dark(rgba(249,249,249,.88),rgba(22,22,24,.88))}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums;overflow-x:clip;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;font-variant-numeric:tabular-nums;overflow-x:clip;-webkit-font-smoothing:antialiased}
 p{margin:0}.mut{color:var(--mut)}small{font-size:13px}
 .app{max-width:480px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 8px) 16px 110px}
-.top{display:flex;justify-content:flex-end;min-height:36px}.top button{background:none;border:0;color:var(--blue);font:inherit;font-size:17px;padding:6px 0;min-height:44px;cursor:pointer}
-h1{font-size:34px;font-weight:700;letter-spacing:.2px;margin:0 0 14px}h2{font-size:20px;font-weight:700;margin:26px 4px 8px}h3{font-size:17px;font-weight:600;margin:0}
+.top{display:flex;justify-content:flex-end;min-height:36px}.top button{background:none;border:0;color:var(--blue);font:inherit;padding:6px 0;min-height:44px;cursor:pointer}
+h1{font-size:34px;font-weight:700;letter-spacing:.2px;margin:0 0 14px}h2{font-size:20px;font-weight:700;margin:26px 4px 8px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}h2 small{font-weight:400;color:var(--mut);font-size:15px}h3{font-size:17px;font-weight:600;margin:0}
 .list{background:var(--card);border-radius:12px;overflow:hidden}
 .row{display:flex;align-items:center;gap:12px;padding:12px 16px;min-height:48px;position:relative;width:100%;background:none;border:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
 .row+.row::before{content:"";position:absolute;top:0;left:16px;right:0;border-top:.5px solid var(--sep)}
 .row .t{flex:1}.row .t small{display:block;color:var(--mut);margin-top:1px}.row .v{text-align:right;white-space:nowrap;color:var(--mut)}.row .v b{color:var(--ink);font-weight:500}
-.chev::after{content:"";width:8px;height:8px;border:solid var(--sep);border-width:2px 2px 0 0;transform:rotate(45deg);margin-left:2px;flex:none;opacity:.9}
-.add{color:var(--blue)}.dot{width:10px;height:10px;border-radius:50%;flex:none}
-.hero{padding:18px 16px}.big{font-size:44px;font-weight:700;letter-spacing:-.5px;line-height:1.05}
+.chev::after{content:"";width:8px;height:8px;border:solid var(--gray);border-width:2px 2px 0 0;transform:rotate(45deg);flex:none}
+.chev.open::after{transform:rotate(135deg)}
+.add{color:var(--blue)}.dot{width:10px;height:10px;border-radius:50%;flex:none;display:inline-block}
+.hero{padding:16px}.big{font-size:42px;font-weight:700;letter-spacing:-.5px;line-height:1.05}.sub{font-size:15px;color:var(--mut);margin-top:4px;min-height:20px}
 .split{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--fill);margin:14px 0 10px;gap:2px}.split i{display:block;height:100%}
 .legend{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.legend div{display:flex;flex-direction:column}.legend span{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--mut)}.legend b{font-size:17px;font-weight:600}
-.status{display:flex;gap:10px;align-items:flex-start;padding:12px 16px}.status i{width:10px;height:10px;border-radius:50%;flex:none;margin-top:6px}
-.fig{position:relative;height:160px;margin:8px 0 0}.fig svg{position:absolute;inset:0;width:100%;height:100%}
+.status{display:flex;gap:10px;align-items:flex-start;padding:12px 16px}.status>i{width:10px;height:10px;border-radius:50%;flex:none;margin-top:6px}
+.fig{position:relative;height:210px;margin:10px 0 0;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:crosshair}.fig svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.tip{position:absolute;top:-4px;background:var(--card);border:.5px solid var(--sep);box-shadow:0 4px 16px rgba(0,0,0,.14);border-radius:10px;padding:6px 10px;font-size:13px;pointer-events:none;white-space:nowrap;z-index:2;line-height:1.35}
+.tip b{font-size:15px}.chips{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}.chips button{border:0;background:var(--fill);color:var(--ink);font:500 14px -apple-system,system-ui,sans-serif;border-radius:99px;padding:0 12px;min-height:34px;cursor:pointer}.chips button[aria-pressed=true]{background:var(--ink);color:var(--card)}
+.ctl{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .prog{height:8px;border-radius:4px;background:var(--fill);overflow:hidden;margin:8px 0 6px}.prog i{display:block;height:100%;background:var(--blue);border-radius:4px}
-.seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--fill);border-radius:9px;padding:2px;gap:2px}
-.seg button{border:0;background:none;font:500 14px -apple-system,Inter,system-ui,sans-serif;color:var(--ink);padding:7px 4px;border-radius:7px;min-height:36px;cursor:pointer}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--fill);border-radius:9px;padding:2px;gap:2px}
+.seg button{border:0;background:none;font:500 14px -apple-system,system-ui,sans-serif;color:var(--ink);padding:6px 4px;border-radius:7px;min-height:34px;cursor:pointer}
 .seg button[aria-pressed=true]{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.15);font-weight:600}
-input[type=range]{width:100%;accent-color:var(--blue);min-height:32px}
+.sl{padding:12px 16px}.sl+.sl{border-top:.5px solid var(--sep)}.sl .ctl b{font-weight:600}.sl small{color:var(--mut)}
+input[type=range]{width:100%;accent-color:var(--blue);min-height:34px;margin:4px 0 0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.stats div{background:var(--card);border-radius:12px;padding:12px 14px}.stats b{display:block;font-size:20px;font-weight:700;margin-top:2px;white-space:nowrap}.stats small{color:var(--mut)}
 .pos{color:var(--green)}.neg{color:var(--red)}.tag{font-size:12px;font-weight:600;padding:2px 7px;border-radius:6px;background:var(--fill);color:var(--mut);margin-left:6px;vertical-align:1px}
-.btn{display:block;width:100%;background:var(--blue);color:#fff;border:0;border-radius:12px;font:600 17px -apple-system,Inter,system-ui,sans-serif;min-height:50px;cursor:pointer;margin-top:14px}
-.btn.del{background:var(--card);color:var(--red)}
-.foot{font-size:13px;color:var(--mut);margin:8px 16px 0}
+.btn{display:block;width:100%;background:var(--blue);color:#fff;border:0;border-radius:12px;font:600 17px -apple-system,system-ui,sans-serif;min-height:50px;cursor:pointer;margin-top:12px}
+.btn.sec{background:var(--card);color:var(--blue)}.btn.del{background:var(--card);color:var(--red)}
+.foot{font-size:13px;color:var(--mut);margin:8px 16px 0}.hint{font-size:13px;color:var(--mut);margin:6px 16px 0}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--fill);border-radius:99px;padding:4px 10px;font-size:13px;font-weight:600}
 button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .tabs{position:fixed;bottom:0;left:0;right:0;background:var(--bar);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid var(--sep);z-index:5;padding-bottom:env(safe-area-inset-bottom)}
-.tabs div{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr)}
+.tabs div{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
 .tabs a{display:grid;justify-items:center;gap:2px;padding:7px 0 6px;color:var(--mut);text-decoration:none;font-size:11px;font-weight:500;min-height:52px}.tabs a.on{color:var(--blue)}
 .tabs svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .sheet{position:fixed;inset:0;z-index:9;display:flex;align-items:flex-end;justify-content:center}.sheet[hidden]{display:none}.scrim{position:absolute;inset:0;background:rgba(0,0,0,.4)}
 .panel{position:relative;width:min(100%,480px);max-height:94vh;overflow:auto;background:var(--bg);border-radius:12px 12px 0 0;padding:0 16px 30px;animation:up .28s cubic-bezier(.2,.8,.2,1)}
 @keyframes up{from{transform:translateY(60px);opacity:.5}}
 .nb{position:sticky;top:0;background:var(--bg);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:12px 0 10px;z-index:1}.nb b{font-size:17px;font-weight:600;text-align:center}
-.nb button{background:none;border:0;color:var(--blue);font:17px -apple-system,Inter,system-ui,sans-serif;min-height:44px;cursor:pointer;padding:0}.nb button:last-child{text-align:right;font-weight:600}.nb button:first-child{text-align:left}
+.nb button{background:none;border:0;color:var(--blue);font:17px -apple-system,system-ui,sans-serif;min-height:44px;cursor:pointer;padding:0}.nb button:last-child{text-align:right;font-weight:600}.nb button:first-child{text-align:left}
 .f{display:flex;align-items:center;gap:12px;padding:0 16px;min-height:48px;position:relative}.f+.f::before{content:"";position:absolute;top:0;left:16px;right:0;border-top:.5px solid var(--sep)}
-.f label{flex:none;max-width:55%}.f input,.f select{flex:1;border:0;background:none;font:17px -apple-system,Inter,system-ui,sans-serif;color:var(--ink);text-align:right;min-height:46px;padding:0;width:100%}
-.f select{direction:rtl}.f input::placeholder{color:var(--mut)}
-.hint{font-size:13px;color:var(--mut);margin:6px 16px 0}
+.f label{flex:none;max-width:58%}.f input,.f select{flex:1;border:0;background:none;font:17px -apple-system,system-ui,sans-serif;color:var(--ink);text-align:right;min-height:46px;padding:0;width:100%}
+.f select{direction:rtl}.f input::placeholder{color:var(--mut)}.f a{color:var(--blue);font-size:13px;text-decoration:none;flex:none}
 details summary{list-style:none;cursor:pointer;color:var(--blue);padding:14px 16px 4px;font-size:15px}details summary::-webkit-details-marker{display:none}
 #toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:rgba(30,30,32,.92);color:#fff;padding:10px 16px;border-radius:12px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:10;max-width:90vw}#toast.on{opacity:1}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-@media(max-width:360px){.big{font-size:36px}.legend b{font-size:15px}}
+@media(max-width:360px){.big{font-size:34px}.legend b{font-size:15px}.stats b{font-size:17px}}
 </style>
 </head>
 <body>
-<div class="app"><div class="top"><button data-act="settings" id="topbtn">Impostazioni</button></div><main id="view"></main></div>
+<div class="app"><div class="top"><button data-act="settings">Impostazioni</button></div><main id="view"></main></div>
 <nav class="tabs"><div id="tabs">
-<a href="#riepilogo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Riepilogo</a>
-<a href="#piano"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h6"/></svg>Piano</a>
-<a href="#investimenti"><svg viewBox="0 0 24 24"><path d="M4 18l5-6 4 3 7-9"/><path d="M15 6h5v5"/></svg>Investimenti</a>
+<a href="#riepilogo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15 9l-1.6 4.4L9 15l1.6-4.4z"/></svg>Riepilogo</a>
+<a href="#strategia"><svg viewBox="0 0 24 24"><path d="M4 18l5-6 4 3 7-9"/><path d="M15 6h5v5"/></svg>Strategia</a>
+<a href="#spese"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Spese</a>
+<a href="#investimenti"><svg viewBox="0 0 24 24"><path d="M4 20V11M10 20V5M16 20v-6M22 20H2"/></svg>Investimenti</a>
 </div></nav>
 <div class="sheet" id="sheet" hidden><div class="scrim" data-act="close"></div><div class="panel" role="dialog" aria-modal="true" id="sc"></div></div>
 <div id="toast" role="status"></div>
 <script>
 {
+/* ---------- dati ---------- */
 const TIPI={etf:'ETF',fondo:'Fondo',azione:'Azione',obbl:'Obbligazione',altro:'Altro'};
-const PRESET=[['Investimento',70],['Bilanciata',50],['Sicurezza',30]];
+const FCOL=['#ff9500','#007aff','#af52de','#ff2d55','#30b0c7','#5856d6','#34c759','#a2845e'];
+const DEFF=()=>[{id:'casa',n:'Casa'},{id:'auto',n:'Auto'},{id:'abb',n:'Abbonamenti'},{id:'pers',n:'Persona e salute'},{id:'altro',n:'Altro'}];
+const PRESETS=[['Tutto investito',{pct:100,cus:0,invNow:true}],['Aggressiva',{pct:70,cus:'3m'}],['Bilanciata',{pct:50,cus:'4m'}],['Prudente',{pct:30,cus:'6m'}]];
 const KEY='bussola2';let S=null;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
-const DEF=()=>({v:2,ts:0,liq:{val:null,data:''},inv:[],inc:[],fix:[],altre:0,pac:[],plan:[],set:{pct:70,cus:5000,sweep:true,resa:4,oriz:36,g1:100000,g1n:'Prossimo traguardo',g2:null,g2n:'Obiettivo finale'}});
-const norm=X=>{const d=DEF();X=Object.assign(d,X||{});X.set=Object.assign(DEF().set,X.set||{});X.liq=X.liq||{val:null,data:''};return X};
+const DEF=()=>({v:3,ts:0,liq:{val:null,data:''},inv:[],inc:[],fix:[],altre:0,pac:[],plan:[],hist:[],checks:[],folders:DEFF(),set:{pct:70,cus:5000,sweep:true,resa:4,oriz:36,g1:100000,g1n:'Prossimo traguardo',g2:null,g2n:'Obiettivo finale',rng:60,vista:'m'}});
+function norm(X){const d=DEF();X=Object.assign(d,X||{});X.set=Object.assign(DEF().set,X.set||{});X.liq=X.liq||{val:null,data:''};
+ ['inv','inc','fix','pac','plan','hist','checks'].forEach(k=>{if(!Array.isArray(X[k]))X[k]=[]});if(!Array.isArray(X.folders)||!X.folders.length)X.folders=DEFF();
+ X.fix.forEach(f=>{if(!X.folders.some(o=>o.id===f.f))f.f=guessFolder(f.n,X.folders)});return X}
+function guessFolder(n,F){const s=String(n||'').toLowerCase(),has=id=>F.some(f=>f.id===id)?id:null;
+ return(/affitt|condomin|luce|gas|bollett|internet|casa|acqua|tari/.test(s)&&has('casa'))||(/auto|assicuraz|bollo|benzin|carbur|tagliand|gomm|rca/.test(s)&&has('auto'))||(/netflix|spotify|abbonam|disney|prime|icloud|telefon|palestra/.test(s)&&has('abb'))||has('altro')||F[F.length-1].id}
 S=norm(S);
-let ref=null,dbh=null,cloud='local',wq=null,writing=false,sheetFn=null;
+let ref=null,cloud='local',wq=null,writing=false,sheetFn=null,SIM=null;const open={};
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function save(){S.ts=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(ref){clearTimeout(wq);wq=setTimeout(push,700)}}
 async function push(){if(!ref)return;if(writing){clearTimeout(wq);wq=setTimeout(push,500);return}writing=true;try{await ref.set(JSON.parse(JSON.stringify(S)));cloud='ok'}catch(e){cloud='err'}writing=false}
-(async()=>{try{if(!window.claude||!claude.use)return;const u=await claude.use('user');const id=u&&await u.id();dbh=await claude.use('db');if(!dbh||!id)return;
- ref=dbh.doc('data/users/'+id+'/bussola2');const snap=await Promise.race([ref.get(),new Promise((_,r)=>setTimeout(()=>r('t'),10000))]);cloud='ok';
- if(snap.exists){const R=snap.data();if(R&&(R.ts||0)>(S.ts||0)){S=norm(JSON.parse(JSON.stringify(R)));try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}render()}else if((S.ts||0)>((R&&R.ts)||0))push()}
- else if(S.ts)push();
- else{const sd=dbh.doc('seed/bussola2'),x=await sd.get();if(x.exists&&x.data()&&x.data().state){S=norm(JSON.parse(JSON.stringify(x.data().state)));save();await push();try{await sd.delete()}catch(e){}render();toast('I tuoi investimenti sono già caricati')}}
- }catch(e){cloud=ref?'err':'local'}})();
-/* utilità */
+(async()=>{try{if(!window.claude||!claude.use)return;const u=await claude.use('user');const id=u&&await u.id();const db=await claude.use('db');if(!db||!id)return;
+ ref=db.doc('data/users/'+id+'/bussola2');const snap=await Promise.race([ref.get(),new Promise((_,r)=>setTimeout(()=>r('t'),10000))]);cloud='ok';
+ if(snap.exists){const R=snap.data();if(R&&(R.ts||0)>(S.ts||0)){S=norm(JSON.parse(JSON.stringify(R)));try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}render()}else if((S.ts||0)>((R&&R.ts)||0))push()}else if(S.ts)push()}catch(e){cloud=ref?'err':'local'}})();
+/* ---------- utilità ---------- */
 const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
 const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const nowYM=()=>iso(today()).slice(0,7),addYM=(ym,k)=>{const[y,m]=ym.split('-').map(Number);const d=new Date(y,m-1+k,1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')};
 const mName=(ym,l)=>{const[y,m]=ym.split('-').map(Number);return new Date(y,m-1,1).toLocaleDateString('it-IT',l?{month:'long',year:'numeric'}:{month:'short',year:'2-digit'})};
 function eu(n,dec){n=+n||0;const s=Math.abs(n).toFixed(dec?2:0).split('.');s[0]=s[0].replace(/\B(?=(\d{3})+(?!\d))/g,'.');return(n<0?'−':'')+s.join(',')+' €'}
+const kk=v=>Math.abs(v)>=1e6?(v/1e6).toFixed(2).replace('.',',')+' mln':Math.abs(v)>=1e4?Math.round(v/1000)+'k':Math.abs(v)>=1000?(v/1000).toFixed(1).replace('.',',')+'k':String(Math.round(v));
 const num=v=>{let s=String(v??'').trim().replace(/[€\s]/g,'');if(!s)return NaN;if(/,\d+$/.test(s))s=s.replace(/\./g,'').replace(',','.');return parseFloat(s)};
 const uid=()=>Math.random().toString(36).slice(2,9),pct=v=>(v>=0?'+':'−')+Math.abs(v).toFixed(2).replace('.',',')+'%';
+const dur=n=>(n>=12?Math.floor(n/12)+(n>=24?' anni':' anno'):'')+(n>=12&&n%12?' e ':'')+(n%12?n%12+(n%12===1?' mese':' mesi'):'')||'subito';
 const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2400)};
-/* calcoli */
+/* ---------- calcoli ---------- */
 const val=x=>x.qty&&x.px?+x.qty*+x.px:+x.val||0,cost=x=>+x.cost||(x.qty&&x.pmc?+x.qty*+x.pmc:0);
-const invTot=()=>S.inv.reduce((s,x)=>s+val(x),0),costTot=()=>S.inv.reduce((s,x)=>s+cost(x),0);
+const invTot=()=>S.inv.reduce((s,x)=>s+val(x),0),costTot=()=>S.inv.reduce((s,x)=>s+cost(x),0),liq=()=>+S.liq.val||0;
 const incM=ym=>S.inc.filter(i=>!i.al||ym<=i.al).reduce((s,i)=>s+(+i.imp||0),0);
 const fixM=()=>S.fix.reduce((s,f)=>s+(+f.imp||0)/(+f.freq||1),0),speseM=()=>fixM()+(+S.altre||0),pacM=()=>S.pac.reduce((s,p)=>s+(+p.imp||0),0);
-function month(ym){const inc=incM(ym),sp=speseM(),rest=inc-sp,invB=rest>0?Math.round(rest*S.set.pct/100):0,pac=pacM(),invF=Math.max(invB,pac);return{inc,sp,rest,invB,pac,free:Math.max(0,invB-pac),inv:invF,cont:rest-invF}}
 const upcoming=(from,k)=>S.plan.filter(p=>p.mese>=from&&p.mese<=addYM(from,k)).reduce((s,p)=>s+(+p.imp||0),0);
-function project(H,extra){const r=(+S.set.resa||0)/1200;let L=+S.liq.val||0,I=invTot();const out=[],cur=nowYM(),plans=S.plan.concat(extra||[]);
- for(const p of plans)if(p.mese<=cur)L-=+p.imp;
- for(let i=1;i<=H;i++){const ym=addYM(cur,i),m=month(ym);let sw=0;
-  for(const p of plans)if(p.mese===ym)L-=+p.imp;
-  I=I*(1+r)+m.inv;L+=m.cont;
-  if(S.set.sweep){const keep=+S.set.cus+upcoming(addYM(ym,1),6);if(L>keep&&m.cont>0){sw=Math.min(m.cont,L-keep);L-=sw;I+=sw}}
-  out.push({ym,L,I,sw})}return out}
-function etaGoal(t){if(!t)return null;if(invTot()>=t)return 0;const P=project(600);const i=P.findIndex(p=>p.I>=t);return i<0?null:i+1}
+const cusVal=c=>c==='3m'?Math.round(speseM()*3/500)*500:c==='4m'?Math.round(speseM()*4/500)*500:c==='6m'?Math.round(speseM()*6/500)*500:+c||0;
+const params=()=>({pct:+S.set.pct,cus:+S.set.cus,resa:+S.set.resa,spese:speseM(),invNow:false,sweep:!!S.set.sweep});
+function month(ym,P){P=P||params();const inc=incM(ym),sp=P.spese,rest=inc-sp,invB=rest>0?Math.round(rest*P.pct/100):0,pac=pacM(),inv=Math.max(invB,pac);return{inc,sp,rest,invB,pac,free:Math.max(0,invB-pac),inv,cont:rest-inv}}
+function project(H,P){P=P||params();const r=(+P.resa||0)/1200,cur=nowYM();let L=liq(),I=invTot(),V=Math.max(costTot(),0)||I;const out=[];
+ for(const p of S.plan)if(p.mese<=cur)L-=+p.imp;
+ if(P.invNow){const x=Math.max(0,L-P.cus-upcoming(cur,6));L-=x;I+=x;V+=x}
+ for(let i=1;i<=H;i++){const ym=addYM(cur,i),m=month(ym,P);for(const p of S.plan)if(p.mese===ym)L-=+p.imp;
+  I=I*(1+r)+m.inv;V+=m.inv;L+=m.cont;if(P.sweep){const keep=P.cus+upcoming(addYM(ym,1),6);if(L>keep&&m.cont>0){const sw=Math.min(m.cont,L-keep);L-=sw;I+=sw;V+=sw}}
+  out.push({ym,L,I,V})}return out}
+function eta(t,P){if(!t)return null;if(invTot()>=t)return 0;const pr=project(600,P),i=pr.findIndex(p=>p.I>=t);return i<0?null:i+1}
+function snap(){if(S.liq.val==null&&!S.inv.length)return;const d=iso(today());S.hist=S.hist.filter(h=>h.d!==d);S.hist.push({d,L:liq(),I:Math.round(invTot()*100)/100});S.hist.sort((a,b)=>a.d.localeCompare(b.d))}
+function histM(){const m={};for(const h of S.hist)m[h.d.slice(0,7)]=h;return m}
+function streak(){let n=0,ym=nowYM();if(!S.checks.some(c=>c.ym===ym))ym=addYM(ym,-1);while(S.checks.some(c=>c.ym===ym)){n++;ym=addYM(ym,-1)}return n}
 function status(){const m=month(addYM(nowYM(),1)),P=project(+S.set.oriz||36);let mn=null;for(const p of P)if(!mn||p.L<mn.L)mn=p;
  if(S.liq.val==null)return['var(--orange)','Inserisci la liquidità del conto','Serve per sapere se il piano regge.'];
  if(!S.inc.length)return['var(--orange)','Aggiungi le tue entrate','Senza entrate Bussola non può dividere lo stipendio.'];
  if(m.rest<0)return['var(--red)','Le spese superano le entrate',`Ogni mese mancano ${eu(-m.rest)}.`];
  if(mn&&mn.L<0)return['var(--red)','Il conto va in negativo',`A ${mName(mn.ym,1)} arriveresti a ${eu(mn.L)}.`];
- if(m.pac>m.invB)return['var(--orange)','I PAC superano la quota investimento',`Investi ${eu(m.pac)} ma la strategia ne prevede ${eu(m.invB)}: la differenza esce dalla contingenza.`];
- const L=+S.liq.val,c=+S.set.cus;if(L>=c)return['var(--green)','Piano sostenibile','Il cuscinetto è pieno.'];
- const i=P.findIndex(p=>p.L>=c);return['var(--green)','Piano sostenibile',i<0?`Il cuscinetto di ${eu(c)} non si riempie entro ${S.set.oriz} mesi.`:`Il cuscinetto di ${eu(c)} sarà pieno a ${mName(P[i].ym,1)}.`]}
-/* grafico */
-function drawChart(){const f=$('#chart');if(!f)return;const W=f.clientWidth,H=f.clientHeight;if(!W)return;const P=project(+S.set.oriz||36),T=[(+S.liq.val||0)+invTot(),...P.map(p=>p.L+p.I)];
- const mx=Math.max(...T)*1.08,mn=Math.min(0,...T),y=v=>6+(H-28)*(mx-v)/(mx-mn||1),x=i=>W*i/(T.length-1);
- const pts=T.map((v,i)=>x(i).toFixed(1)+','+y(v).toFixed(1)).join(' '),g=S.set.g1&&S.set.g1>mn&&S.set.g1<mx?y(S.set.g1):null,k=v=>v>=1000?Math.round(v/1000)+'k':Math.round(v);
- f.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Patrimonio previsto nei prossimi ${P.length} mesi"><defs><linearGradient id="gr" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--blue)" stop-opacity=".25"/><stop offset="1" stop-color="var(--blue)" stop-opacity="0"/></linearGradient></defs>
- ${g!=null?`<line x1="0" x2="${W}" y1="${g}" y2="${g}" stroke="var(--mut)" stroke-dasharray="3 4" stroke-width="1"/><text x="${W}" y="${g<18?g+15:g-5}" text-anchor="end" font-size="12" fill="var(--mut)">${k(S.set.g1)} €</text>`:''}
- <polygon points="0,${H-22} ${pts} ${W},${H-22}" fill="url(#gr)"/><polyline points="${pts}" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
- <text x="0" y="${H-4}" font-size="12" fill="var(--mut)">Oggi</text><text x="${W}" y="${H-4}" text-anchor="end" font-size="12" fill="var(--mut)">${mName(P[P.length-1].ym)} · ${k(T[T.length-1])} €</text></svg>`}
-/* viste */
+ if(m.pac>m.invB)return['var(--orange)','I PAC superano la quota investimento',`Investi ${eu(m.pac)} ma la strategia ne prevede ${eu(m.invB)}.`];
+ const c=+S.set.cus;if(liq()>=c)return['var(--green)','Piano sostenibile','Il cuscinetto è pieno.'];const i=P.findIndex(p=>p.L>=c);
+ return['var(--green)','Piano sostenibile',i<0?`Il cuscinetto di ${eu(c)} non si riempie entro ${P.length} mesi.`:`Il cuscinetto di ${eu(c)} sarà pieno a ${mName(P[i].ym,1)}.`]}
+/* ---------- grafico interattivo ---------- */
+const CH={};
+function chart(id,cfg){const el=document.getElementById(id);if(!el)return;cfg.hover=null;CH[id]=cfg;drawC(id);
+ if(el._b)return;el._b=1;let raf=0;
+ const mv=e=>{const c=CH[id];if(!c||!c.n)return;const r=el.getBoundingClientRect(),x=e.clientX-r.left;let i=c.mode==='bars'?Math.floor(x/(r.width/c.n)):Math.round(x/r.width*(c.n-1));i=Math.max(0,Math.min(c.n-1,i));
+  if(i!==c.hover){c.hover=i;cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{drawC(id);c.onScrub&&c.onScrub(i)})}};
+ const end=()=>{const c=CH[id];if(c&&c.hover!=null){c.hover=null;drawC(id);c.onScrub&&c.onScrub(null)}};
+ el.addEventListener('pointerdown',mv);el.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'||e.buttons)mv(e)});
+ el.addEventListener('pointerleave',end);el.addEventListener('pointercancel',end);el.addEventListener('pointerup',e=>{if(e.pointerType!=='mouse')setTimeout(end,900)})}
+function drawC(id){const c=CH[id],el=document.getElementById(id);if(!c||!el)return;const W=el.clientWidth,H=el.clientHeight;if(!W)return;const bot=H-20,top=8,h=c.hover;
+ let all=[];if(c.mode==='bars')c.bars.forEach(b=>all.push(b.parts.reduce((s,p)=>s+p.v,0)));else c.series.forEach(s=>s.vals.forEach(v=>v!=null&&all.push(v)));
+ let mx=Math.max(1,...all),mn=c.mode==='bars'?0:Math.min(0,...all);if(c.goal&&c.goal<mx*1.6)mx=Math.max(mx,c.goal);mx*=1.06;
+ const y=v=>top+(bot-top)*(mx-v)/(mx-mn||1);c.n=c.mode==='bars'?c.bars.length:c.labels.length;let svg='';
+ const gy=c.goal&&c.goal<=mx?y(c.goal):null;if(gy!=null)svg+=`<line x1="0" x2="${W}" y1="${gy}" y2="${gy}" stroke="var(--gray)" stroke-dasharray="3 4"/><text x="4" y="${gy-5}" font-size="11" fill="var(--mut)">obiettivo ${kk(c.goal)} €</text>`;
+ if(c.mode==='bars'){const bw=W/c.n,gap=Math.min(8,bw*.25);c.bars.forEach((b,i)=>{let acc=0;const op=h==null||h===i?1:.45;b.parts.forEach(p=>{const y1=y(acc+p.v),y0=y(acc);svg+=`<rect x="${(i*bw+gap/2).toFixed(1)}" y="${y1.toFixed(1)}" width="${(bw-gap).toFixed(1)}" height="${Math.max(0,y0-y1).toFixed(1)}" rx="3" fill="${p.color}" opacity="${b.est?op*.6:op}"/>`;acc+=p.v})});
+  const step=Math.ceil(c.n/6);c.bars.forEach((b,i)=>{if(i%step===0||i===c.n-1)svg+=`<text x="${(i*bw+bw/2).toFixed(1)}" y="${H-4}" text-anchor="middle" font-size="11" fill="var(--mut)">${b.lab}</text>`})}
+ else{const x=i=>c.n<2?W/2:i*W/(c.n-1);c.series.forEach((s,si)=>{const pts=s.vals.map((v,i)=>v==null?null:[x(i),y(v)]);const seg=(a,b)=>pts.slice(a,b+1).filter(Boolean).map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+   if(s.fill){const ps=pts.filter(Boolean);if(ps.length>1)svg+=`<defs><linearGradient id="g${id}${si}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="${s.color}" stop-opacity=".22"/><stop offset="1" stop-color="${s.color}" stop-opacity="0"/></linearGradient></defs><polygon points="${ps[0][0]},${bot} ${seg(0,pts.length-1)} ${ps[ps.length-1][0]},${bot}" fill="url(#g${id}${si})"/>`}
+   const sp=c.split??-1;if(sp>=0&&s.splitDash){svg+=`<polyline points="${seg(0,sp)}" fill="none" stroke="${s.color}" stroke-width="${s.w||2.5}" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${seg(sp,pts.length-1)}" fill="none" stroke="${s.color}" stroke-width="${s.w||2.5}" stroke-dasharray="5 4" stroke-linecap="round"/>`}
+   else svg+=`<polyline points="${seg(0,pts.length-1)}" fill="none" stroke="${s.color}" stroke-width="${s.w||2.5}" ${s.dash?'stroke-dasharray="5 4"':''} stroke-linejoin="round" stroke-linecap="round"/>`});
+  if(c.split>0&&c.split<c.n-1)svg+=`<line x1="${x(c.split)}" x2="${x(c.split)}" y1="${top}" y2="${bot}" stroke="var(--sep)"/><text x="${x(c.split)+4}" y="${bot-4}" font-size="11" fill="var(--mut)">oggi</text>`;
+  const idx=[0,Math.floor((c.n-1)/2),c.n-1].filter((v,i,a)=>a.indexOf(v)===i);idx.forEach((i,k)=>svg+=`<text x="${x(i)}" y="${H-4}" text-anchor="${k===0?'start':k===idx.length-1?'end':'middle'}" font-size="11" fill="var(--mut)">${c.labels[i]?mName(c.labels[i]):''}</text>`);
+  if(h!=null){svg+=`<line x1="${x(h)}" x2="${x(h)}" y1="${top}" y2="${bot}" stroke="var(--mut)" stroke-width="1"/>`;c.series.forEach(s=>{const v=s.vals[h];if(v!=null)svg+=`<circle cx="${x(h)}" cy="${y(v)}" r="5" fill="${s.color}" stroke="var(--card)" stroke-width="2"/>`})}}
+ let tip='';if(h!=null&&c.tip){const xx=c.mode==='bars'?(h+.5)*W/c.n:(c.n<2?W/2:h*W/(c.n-1));tip=`<div class="tip" style="left:${Math.max(0,Math.min(W-170,xx-85))}px">${c.tip(h)}</div>`}
+ el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(c.label||'Grafico')}">${svg}</svg>${tip}`}
+new ResizeObserver(()=>Object.keys(CH).forEach(drawC)).observe(document.body);
+/* ---------- viste ---------- */
 const legend=m=>`<div class="split" aria-hidden="true"><i style="flex:${Math.max(m.sp,0)};background:var(--orange)"></i><i style="flex:${Math.max(m.inv,0)};background:var(--blue)"></i><i style="flex:${Math.max(m.cont,0)};background:var(--green)"></i></div>
  <div class="legend"><div><span><i class="dot" style="background:var(--orange)"></i>Spese</span><b>${eu(m.sp)}</b></div><div><span><i class="dot" style="background:var(--blue)"></i>Investi</span><b>${eu(m.inv)}</b></div><div><span><i class="dot" style="background:var(--green)"></i>Contingenza</span><b class="${m.cont<0?'neg':''}">${eu(m.cont)}</b></div></div>`;
-function todo(){const m=month(addYM(nowYM(),1)),L=+S.liq.val||0,c=+S.set.cus,extra=L-c-upcoming(nowYM(),6),out=[];
+function todo(){const m=month(addYM(nowYM(),1)),L=liq(),c=+S.set.cus,extra=L-c-upcoming(nowYM(),6),out=[];
  S.pac.forEach(p=>out.push([`PAC ${esc(p.n)}`,`automatico${p.g?' il giorno '+p.g:''}`,eu(p.imp),'var(--blue)']));
  if(m.free>0)out.push(['Investi a tua scelta','quota libera della strategia',eu(m.free),'var(--blue)']);
  if(m.cont>0)out.push(S.set.sweep&&L>=c?['Investi anche la contingenza','il cuscinetto è già pieno',eu(m.cont),'var(--blue)']:['Lascia sul conto','per riempire il cuscinetto',eu(m.cont),'var(--green)']);
- if(S.set.sweep&&extra>100&&S.liq.val!=null)out.push(['Liquidità in più sul conto','oltre cuscinetto e spese previste: puoi investirla',eu(extra),'var(--blue)']);
- return out}
-function vRie(){const L=+S.liq.val||0,I=invTot(),C=costTot(),m=month(addYM(nowYM(),1)),st=status(),T=todo(),g1=S.set.g1,eta=etaGoal(g1);
- return`<h1>Riepilogo</h1><div class="list hero"><small class="mut">Patrimonio</small><p class="big">${eu(L+I)}</p>
- <div style="display:flex;gap:18px;margin-top:8px"><button class="row" data-act="liq" style="padding:0;min-height:0;width:auto"><span><small class="mut">Conto</small><br><b style="font-weight:600">${S.liq.val==null?'<span style="color:var(--blue)">Inserisci</span>':eu(L)}</b></span></button><a href="#investimenti" style="color:inherit;text-decoration:none"><small class="mut">Investito</small><br><b style="font-weight:600">${eu(I)}</b> <small class="${I-C>=0?'pos':'neg'}">${C?pct((I-C)/C*100):''}</small></a></div>
- <div class="fig" id="chart"></div></div>
+ if(S.set.sweep&&extra>100&&S.liq.val!=null)out.push(['Liquidità in più sul conto','oltre cuscinetto e spese previste',eu(extra),'var(--blue)']);return out}
+function mainData(){const hm=histM(),cur=nowYM(),past=Object.keys(hm).filter(k=>k<cur).sort(),P=project(+S.set.rng||60);
+ const labels=[...past,cur,...P.map(p=>p.ym)],L=[...past.map(k=>hm[k].L),liq(),...P.map(p=>p.L)],I=[...past.map(k=>hm[k].I),invTot(),...P.map(p=>p.I)];return{labels,L,I,split:past.length}}
+function mainChart(){const D=mainData(),T=D.L.map((l,i)=>l+D.I[i]),g=S.set.g1;
+ const tip=i=>`<span class="mut">${mName(D.labels[i],1)}${i>D.split?' · stima':''}</span><br><b>${eu(T[i])}</b><br><span style="color:var(--blue)">●</span> ${eu(D.I[i])} <span style="color:var(--green)">●</span> ${eu(D.L[i])}`;
+ const scrub=i=>{const b=$('#bigv'),s=$('#bigs');if(!b)return;if(i==null){b.textContent=eu(liq()+invTot());s.innerHTML=subTxt();return}b.textContent=eu(T[i]);s.textContent=(i>D.split?'Stima a ':i===D.split?'Oggi · ':'')+mName(D.labels[i],1)};
+ if(S.set.vista==='a'){const yrs={};D.labels.forEach((l,i)=>{yrs[l.slice(0,4)]=i});const bars=Object.entries(yrs).map(([y,i])=>({lab:"'"+y.slice(2),i,est:i>D.split,parts:[{v:Math.max(0,D.I[i]),color:'var(--blue)'},{v:Math.max(0,D.L[i]),color:'var(--green)'}]}));
+  chart('chM',{mode:'bars',bars,goal:g,label:'Patrimonio anno per anno',tip:k=>tip(bars[k].i),onScrub:k=>scrub(k==null?null:bars[k].i)})}
+ else chart('chM',{labels:D.labels,split:D.split,goal:g,label:'Andamento del patrimonio',series:[{vals:T,color:'var(--blue)',fill:1,splitDash:1},{vals:D.I,color:'var(--blue)',w:1.2,dash:1}],tip,onScrub:scrub})}
+const subTxt=()=>{const I=invTot(),C=costTot();return`<span>Conto ${S.liq.val==null?'<a href="#" data-act="liq" style="color:var(--blue);text-decoration:none">da inserire</a>':eu(liq())}</span> · <span>Investito ${eu(I)} ${C?`<span class="${I-C>=0?'pos':'neg'}">${pct((I-C)/C*100)}</span>`:''}</span>`};
+const RNG=[[12,'1A'],[36,'3A'],[60,'5A'],[120,'10A'],[240,'20A']];
+function vRie(){const st=status(),m=month(addYM(nowYM(),1)),T=todo(),I=invTot(),g1=S.set.g1,e1=eta(g1),cur=nowYM(),checked=S.checks.some(c=>c.ym===cur),sk=streak();
+ const ms=Math.ceil((I+1)/10000)*10000,em=g1&&ms<g1?eta(ms):null;
+ return`<h1>Riepilogo</h1><div class="list hero"><small class="mut">Patrimonio</small><p class="big" id="bigv">${eu(liq()+I)}</p><p class="sub" id="bigs">${subTxt()}</p>
+ <div class="fig" id="chM"></div>
+ <div class="ctl" style="margin-top:10px"><div class="seg" style="width:150px">${[['m','Mensile'],['a','Annuale']].map(([k,n])=>`<button data-act="vista" data-v="${k}" aria-pressed="${S.set.vista===k}">${n}</button>`).join('')}</div>
+ <div class="seg">${RNG.map(([n,l])=>`<button data-act="rng" data-v="${n}" aria-pressed="${+S.set.rng===n}">${l}</button>`).join('')}</div></div>
+ <p class="hint" style="margin:8px 0 0">Tocca o trascina il grafico per leggere i valori. ${S.set.vista==='a'?'Blu: investito; verde: conto; più chiaro: stima.':'Linea piena: storico; tratteggiata: stima.'}</p></div>
  <div class="list" style="margin-top:12px"><div class="status"><i style="background:${st[0]}"></i><div><h3>${st[1]}</h3><p class="mut" style="font-size:15px">${st[2]}</p></div></div></div>
- <h2>Il piano del mese</h2><div class="list hero">${S.inc.length?`<small class="mut">Entrate ${eu(m.inc)}</small>${legend(m)}`:'<p class="mut">Aggiungi le entrate nella scheda Piano.</p>'}</div>
+ ${!checked?`<div class="list" style="margin-top:12px"><button class="row chev" data-act="check"><span class="dot" style="background:var(--blue)"></span><span class="t"><b style="font-weight:600">Chiudi il mese di ${mName(cur,1).split(' ')[0]}</b><small>Aggiorna saldo e prezzi: vedi quanto sei cresciuto${sk?' · '+sk+(sk===1?' mese':' mesi')+' di fila':''}</small></span></button></div>`:`<p class="hint">${mName(cur,1)} chiuso <span class="badge">${sk} ${sk===1?'mese':'mesi'} di fila sul piano</span></p>`}
+ ${g1?`<h2>${esc(S.set.g1n)}<small>${Math.floor(Math.min(100,I/g1*100))}%</small></h2><div class="list hero"><div style="display:flex;justify-content:space-between"><b style="font-weight:600">${eu(I)}</b><span class="mut">${eu(g1)}</span></div><div class="prog"><i style="width:${Math.min(100,I/g1*100).toFixed(1)}%"></i></div>
+ <p class="mut" style="font-size:15px">${I>=g1?'Raggiunto. Imposta il prossimo traguardo.':e1==null?'Con il piano attuale non ci arrivi.':`Ci arrivi a <b style="color:var(--ink);font-weight:600">${mName(addYM(cur,e1),1)}</b>, tra ${dur(e1)}.`}${em?` Tappa intermedia: <b style="color:var(--ink);font-weight:600">${kk(ms)} €</b> a ${mName(addYM(cur,em),1)}.`:''}</p>
+ <button class="btn sec" data-act="go" data-h="strategia">Arrivarci prima? Prova il simulatore</button></div>`:''}
+ <h2>Il piano del mese</h2><div class="list hero">${S.inc.length?`<small class="mut">Entrate ${eu(m.inc)}</small>${legend(m)}`:'<p class="mut">Aggiungi le entrate nella scheda Spese.</p>'}</div>
  ${T.length?`<h2>Cosa fare questo mese</h2><div class="list">${T.map(t=>`<div class="row"><i class="dot" style="background:${t[3]}"></i><span class="t">${t[0]}<small>${t[1]}</small></span><span class="v"><b>${t[2]}</b></span></div>`).join('')}</div>`:''}
- ${g1?`<h2>${esc(S.set.g1n)}</h2><div class="list hero"><div style="display:flex;justify-content:space-between"><b style="font-weight:600">${eu(I)}</b><span class="mut">${eu(g1)}</span></div><div class="prog"><i style="width:${Math.min(100,I/g1*100).toFixed(1)}%"></i></div>
- <p class="mut" style="font-size:15px">${I>=g1?'Raggiunto. Imposta il prossimo traguardo nel Piano.':eta==null?'Con il piano attuale non ci arrivi: aumenta la quota investimento.':`Ci arrivi a <b style="color:var(--ink);font-weight:600">${mName(addYM(nowYM(),eta),1)}</b>, tra ${eta>=12?Math.floor(eta/12)+(eta>=24?' anni':' anno'):''}${eta>=12&&eta%12?' e ':''}${eta%12?eta%12+' mesi':''}.`}</p></div>`:''}
  <p class="foot">Stime con rendimento ipotetico del ${String(S.set.resa).replace('.',',')}% annuo: i mercati non vanno in linea retta.</p>`}
-function vPiano(){const m=month(addYM(nowYM(),1)),s=S.set,pre=PRESET.find(p=>p[1]==s.pct);
+/* ---------- simulatore ---------- */
+function simInit(){if(!SIM)SIM={pct:+S.set.pct,cus:+S.set.cus,resa:+S.set.resa,spese:Math.round(speseM()),invNow:false,sweep:!!S.set.sweep}}
+function vStrat(){simInit();const sp0=Math.round(speseM()),cmax=Math.max(20000,Math.ceil(+S.set.cus*2/1000)*1000),smax=Math.max(1000,Math.ceil(sp0*2/100)*100);
+ return`<h1>Strategia</h1><div class="list hero"><small class="mut" id="sLbl">Raggiungi ${esc(S.set.g1n.toLowerCase())} di ${eu(S.set.g1)}</small><p class="big" id="sEta">—</p><p class="sub" id="sDelta"></p>
+ <div class="fig" id="chS"></div><p style="font-size:13px;color:var(--mut);margin-top:8px;display:flex;gap:14px"><span><i class="dot" style="background:var(--blue)"></i> Simulazione</span><span><i class="dot" style="background:var(--gray)"></i> Piano attuale</span></p></div>
+ <div class="chips" role="group" aria-label="Strategie pronte">${PRESETS.map(([n],i)=>`<button data-act="preset" data-i="${i}" aria-pressed="false">${n}</button>`).join('')}</div>
+ <div class="list" style="margin-top:12px">
+ <div class="sl"><div class="ctl"><span>Investi di ciò che avanza</span><b id="vPct"></b></div><input type="range" id="rPct" min="0" max="100" step="5" value="${SIM.pct}" aria-label="Percentuale investita"><small id="hPct"></small></div>
+ <div class="sl"><div class="ctl"><span>Cuscinetto sul conto</span><b id="vCus"></b></div><input type="range" id="rCus" min="0" max="${cmax}" step="500" value="${SIM.cus}" aria-label="Cuscinetto"><small id="hCus"></small></div>
+ <div class="sl"><div class="ctl"><span>Spese al mese</span><b id="vSp"></b></div><input type="range" id="rSp" min="0" max="${smax}" step="50" value="${SIM.spese}" aria-label="Spese mensili"><small id="hSp"></small></div>
+ <div class="sl"><div class="ctl"><span>Rendimento annuo stimato</span><b id="vRe"></b></div><input type="range" id="rRe" min="0" max="10" step="0.5" value="${SIM.resa}" aria-label="Rendimento annuo"><small>Ipotesi: nessuno conosce il rendimento futuro.</small></div>
+ <label class="row" style="cursor:pointer"><span class="t">Investi subito la liquidità in eccesso<small id="hNow"></small></span><input type="checkbox" id="rNow" ${SIM.invNow?'checked':''} style="width:22px;height:22px;accent-color:var(--blue)"></label></div>
+ <div class="stats" id="sStats"></div><p class="hint" id="sRisk" style="margin-top:12px"></p>
+ <button class="btn" data-act="apply">Applica al mio piano</button><button class="btn sec" data-act="simreset">Ripristina il piano attuale</button>`}
+function updSim(){if(!$('#chS'))return;const P0=params(),P1={...SIM},g=S.set.g1||100000,cur=nowYM(),e0=eta(g,P0),e1=eta(g,P1),m=month(addYM(cur,1),P1);
+ const H=Math.min(480,Math.max(36,Math.max(e0||0,e1||0)+12)),A=project(H,P0),B=project(H,P1),labels=[cur,...A.map(p=>p.ym)],a=[liq()+invTot(),...A.map(p=>p.L+p.I)];
+ const I0=invTot(),L0=liq(),x0=P1.invNow?Math.max(0,L0-P1.cus-upcoming(cur,6)):0,b=[L0+I0,...B.map(p=>p.L+p.I)];
+ $('#sEta').textContent=e1==null?'Non ci arrivi':e1===0?'Già raggiunto':mName(addYM(cur,e1),1);
+ const d=e0!=null&&e1!=null?e0-e1:null;$('#sDelta').innerHTML=e1==null?'Aumenta la quota investita o riduci le spese.':d==null?'Con il piano attuale non ci arriveresti: questa strategia sì.':d>0?`<span class="pos">${dur(d)} prima</span> del piano attuale · tra ${dur(e1)}`:d<0?`<span class="neg">${dur(-d)} dopo</span> il piano attuale · tra ${dur(e1)}`:`Come il piano attuale · tra ${dur(e1)}`;
+ $('#vPct').textContent=SIM.pct+'%';$('#hPct').textContent=m.rest>0?`${eu(m.inv)} investiti e ${eu(Math.max(0,m.cont))} sul conto ogni mese, su ${eu(m.rest)} che avanzano`:'Le spese assorbono tutte le entrate';
+ $('#vCus').textContent=eu(SIM.cus);const sp=speseM()||1;$('#hCus').textContent=SIM.cus?`circa ${(SIM.cus/sp).toFixed(1).replace('.',',')} mesi di spese`:'nessun fondo per gli imprevisti';
+ $('#vSp').textContent=eu(SIM.spese);const ds=SIM.spese-Math.round(speseM());$('#hSp').textContent=ds?(ds<0?`${eu(-ds)} in meno di oggi`:`${eu(ds)} in più di oggi`):'come oggi';
+ $('#vRe').textContent=String(SIM.resa).replace('.',',')+'%';$('#hNow').textContent=x0>0?`sposteresti subito ${eu(x0)} dal conto`:'oggi non c’è liquidità oltre il cuscinetto';
+ const at=e1?B[Math.min(e1,B.length)-1]:B[B.length-1],y10=project(120,P1).pop(),y10b=project(120,P0).pop(),lo=eta(g,{...P1,resa:Math.max(0,P1.resa-2)}),hi=eta(g,{...P1,resa:P1.resa+2});
+ $('#sStats').innerHTML=`<div><small>Investi ogni mese</small><b>${eu(m.inv)}</b></div><div><small>Patrimonio tra 10 anni</small><b>${eu(y10.L+y10.I)}</b><small class="${y10.L+y10.I>=y10b.L+y10b.I?'pos':'neg'}">${sg(y10.L+y10.I-y10b.L-y10b.I)} vs piano</small></div>
+ <div><small>Di cui versati da te</small><b>${eu(at.V)}</b></div><div><small>Di cui rendimento</small><b class="pos">${eu(Math.max(0,at.I-at.V))}</b><small>${e1?'al traguardo':'a fine periodo'}</small></div>`;
+ $('#sRisk').innerHTML=(SIM.cus<speseM()*3?'<b style="color:var(--orange)">Cuscinetto sotto 3 mesi di spese.</b> Un imprevisto potrebbe costringerti a vendere investimenti in un momento sfavorevole. ':'')+(lo!==hi&&e1?`Con rendimenti tra ${String(Math.max(0,P1.resa-2)).replace('.',',')}% e ${String(P1.resa+2).replace('.',',')}% l’obiettivo arriverebbe ${hi?'tra '+mName(addYM(cur,hi)):'—'} e ${lo?mName(addYM(cur,lo)):'mai'}.`:'');
+ document.querySelectorAll('[data-act=preset]').forEach(x=>{const p=PRESETS[+x.dataset.i][1];x.setAttribute('aria-pressed',p.pct===SIM.pct&&cusVal(p.cus)===SIM.cus&&!!p.invNow===SIM.invNow)});
+ chart('chS',{labels,split:-1,goal:g,label:'Simulazione e piano attuale a confronto',series:[{vals:a,color:'var(--gray)',w:2,dash:1},{vals:b,color:'var(--blue)',fill:1}],
+  tip:i=>`<span class="mut">${mName(labels[i],1)}</span><br><span style="color:var(--blue)">●</span> <b>${eu(b[i])}</b><br><span style="color:var(--gray)">●</span> ${eu(a[i])} <span class="${b[i]-a[i]>=0?'pos':'neg'}">${sg(b[i]-a[i])}</span>`})}
+const sg=n=>(n>=0?'+':'−')+eu(Math.abs(n));
+/* ---------- spese ---------- */
+function vSpese(){const m=month(addYM(nowYM(),1)),F=S.folders,tot=speseM()||1,ft=f=>S.fix.filter(x=>x.f===f.id).reduce((s,x)=>s+(+x.imp||0)/(+x.freq||1),0);
  const row=(act,id,t,sub,v)=>`<button class="row chev" data-act="${act}" data-id="${id}"><span class="t">${t}${sub?`<small>${sub}</small>`:''}</span><span class="v">${v}</span></button>`;
- return`<h1>Piano</h1>
- <h2 style="margin-top:0">Strategia</h2><div class="list hero"><div class="seg" role="group" aria-label="Strategia">${PRESET.map(([n,p])=>`<button data-act="preset" data-p="${p}" aria-pressed="${s.pct==p}">${n}</button>`).join('')}</div>
- <p style="margin-top:14px">Di quello che avanza dopo le spese investi <b id="pctv">${s.pct}%</b>${pre?'':' (personalizzata)'}</p><input type="range" min="0" max="100" step="5" value="${s.pct}" id="pct" aria-label="Percentuale da investire">
- <div id="split">${legend(m)}</div></div>
- <p class="hint">${m.rest>0?'Su '+eu(m.inc)+' di entrate e '+eu(m.sp)+' di spese avanzano '+eu(m.rest)+' al mese.':'Prima inserisci entrate e spese.'}</p>
- <h2>Entrate</h2><div class="list">${S.inc.map(i=>row('inc',i.id,esc(i.n),i.al?'fino a '+mName(i.al,1):'ogni mese',eu(i.imp)+'/mese')).join('')}<button class="row add" data-act="inc">Aggiungi entrata</button></div>
- <p class="hint">L’indennità di missione aggiungila con la data di fine: dopo quella data Bussola smette di contarla.</p>
- <h2>Spese</h2><div class="list">${S.fix.map(f=>row('fix',f.id,esc(f.n),+f.freq===12?eu(f.imp)+' all’anno':'ogni mese',eu(f.imp/(+f.freq||1))+'/mese')).join('')}<button class="row add" data-act="fix">Aggiungi spesa fissa</button>
- ${row('altre','','Altre spese','spesa, benzina, uscite: una stima',eu(S.altre)+'/mese')}</div><p class="hint">Totale spese: ${eu(speseM())} al mese.</p>
- <h2>PAC</h2><div class="list">${S.pac.map(p=>row('pac',p.id,esc(p.n),p.g?'il giorno '+p.g:'',eu(p.imp)+'/mese')).join('')}<button class="row add" data-act="pac">Aggiungi PAC</button></div>
- <p class="hint">I PAC fanno parte della quota investimento: ${m.pac>m.invB?'<span class="neg">ora la superano di '+eu(m.pac-m.invB)+'</span>':'restano '+eu(m.free)+' da investire a tua scelta'}.</p>
- <h2>Conto</h2><div class="list">${row('liq','','Liquidità',S.liq.data?'aggiornata al '+new Date(S.liq.data+'T00:00:00').toLocaleDateString('it-IT',{day:'numeric',month:'short'}):'da inserire',S.liq.val==null?'—':eu(S.liq.val))}${row('cus','','Cuscinetto','quanto vuoi tenere fermo',eu(s.cus))}
- <label class="row" style="cursor:pointer"><span class="t">Spostamento automatico<small>quando il cuscinetto è pieno, la contingenza va negli investimenti</small></span><input type="checkbox" id="sweep" ${s.sweep?'checked':''} style="width:22px;height:22px;accent-color:var(--green)"></label></div>
+ const parts=F.map((f,i)=>[f,ft(f),FCOL[i%FCOL.length]]).filter(p=>p[1]>0).concat(+S.altre?[[{n:'Altre spese'},+S.altre,'var(--gray)']]:[]);
+ return`<h1>Spese</h1><div class="list hero"><small class="mut">Spese al mese</small><p class="big">${eu(speseM())}</p><p class="sub">${m.inc?Math.round(speseM()/m.inc*100)+'% delle entrate':''}</p>
+ <div class="split" aria-hidden="true">${parts.map(p=>`<i style="flex:${p[1]};background:${p[2]}"></i>`).join('')}</div>
+ <div style="display:flex;flex-wrap:wrap;gap:4px 14px">${parts.map(p=>`<span style="font-size:13px;color:var(--mut);display:flex;align-items:center;gap:6px"><i class="dot" style="background:${p[2]}"></i>${esc(p[0].n)} ${Math.round(p[1]/tot*100)}%</span>`).join('')}</div></div>
+ <h2>Cartelle<small><button data-act="folder" style="background:none;border:0;color:var(--blue);font:inherit;cursor:pointer;padding:0;min-height:32px">Nuova</button></small></h2>
+ ${F.map((f,i)=>{const it=S.fix.filter(x=>x.f===f.id),o=open[f.id];return`<div class="list" style="margin-bottom:10px"><button class="row chev ${o?'open':''}" data-act="tfold" data-id="${f.id}" aria-expanded="${!!o}"><span class="dot" style="background:${FCOL[i%FCOL.length]}"></span><span class="t"><b style="font-weight:600">${esc(f.n)}</b><small>${it.length} ${it.length===1?'voce':'voci'}</small></span><span class="v"><b>${eu(ft(f))}</b>/mese</span></button>
+ ${o?it.map(x=>row('fix',x.id,esc(x.n),+x.freq===12?eu(x.imp)+' all’anno':'ogni mese',eu(x.imp/(+x.freq||1)))).join('')+`<button class="row add" data-act="fix" data-f="${f.id}">Aggiungi in ${esc(f.n)}</button><button class="row" data-act="folder" data-id="${f.id}" style="color:var(--mut);font-size:15px">Rinomina o elimina cartella</button>`:''}</div>`}).join('')}
+ <div class="list">${row('altre','','Altre spese variabili','spesa, benzina, uscite: una stima',eu(S.altre)+'/mese')}</div>
+ <h2>Entrate<small>${eu(m.inc)}/mese</small></h2><div class="list">${S.inc.map(i=>row('inc',i.id,esc(i.n),i.al?'fino a '+mName(i.al,1):'ogni mese',eu(i.imp)+'/mese')).join('')}<button class="row add" data-act="inc">Aggiungi entrata</button></div>
+ <p class="hint">L’indennità di missione aggiungila con la data di fine.</p>
+ <h2>PAC<small>${eu(pacM())}/mese</small></h2><div class="list">${S.pac.map(p=>row('pac',p.id,esc(p.n),p.g?'il giorno '+p.g:'',eu(p.imp)+'/mese')).join('')}<button class="row add" data-act="pac">Aggiungi PAC</button></div>
  <h2>Spese previste</h2><div class="list">${[...S.plan].sort((a,b)=>a.mese.localeCompare(b.mese)).map(p=>row('plan',p.id,esc(p.n),mName(p.mese,1),eu(p.imp))).join('')}<button class="row add" data-act="plan">Aggiungi spesa prevista</button></div>
- <p class="hint">Una tantum: caparra, trasloco, distribuzione dell’auto. Bussola le tiene da parte prima di spostare soldi sugli investimenti.</p>
- <h2>Obiettivi</h2><div class="list">${row('goal','1',esc(s.g1n),'investiti',s.g1?eu(s.g1):'—')}${row('goal','2',esc(s.g2n),'investiti',s.g2?eu(s.g2):'—')}</div>`}
-function vInv(){const T=invTot(),C=costTot(),G=T-C,by={};S.inv.forEach(x=>by[x.tipo]=(by[x.tipo]||0)+val(x));
- return`<h1>Investimenti</h1><div class="list hero"><small class="mut">Valore</small><p class="big">${eu(T)}</p><p class="${G>=0?'pos':'neg'}" style="margin-top:4px;font-weight:500">${G>=0?'+':''}${eu(G,1)}${C?' ('+pct(G/C*100)+')':''}</p>
- <div class="split" aria-hidden="true">${Object.entries(by).map(([k,v],i)=>`<i style="flex:${v};background:${['var(--blue)','var(--green)','var(--orange)','#af52de','#5ac8fa'][i%5]}"></i>`).join('')}</div>
- <div style="display:flex;flex-wrap:wrap;gap:4px 14px">${Object.entries(by).map(([k,v],i)=>`<span style="font-size:13px;color:var(--mut);display:flex;align-items:center;gap:6px"><i class="dot" style="background:${['var(--blue)','var(--green)','var(--orange)','#af52de','#5ac8fa'][i%5]}"></i>${TIPI[k]} ${T?Math.round(v/T*100):0}%</span>`).join('')}</div></div>
+ <h2>Conto</h2><div class="list">${row('liq','','Liquidità',S.liq.data?'aggiornata al '+new Date(S.liq.data+'T00:00:00').toLocaleDateString('it-IT',{day:'numeric',month:'short'}):'da inserire',S.liq.val==null?'—':eu(S.liq.val))}${row('cus','','Cuscinetto','quanto tieni fermo',eu(S.set.cus))}
+ <label class="row" style="cursor:pointer"><span class="t">Spostamento automatico<small>a cuscinetto pieno, la contingenza va investita</small></span><input type="checkbox" id="sweep" ${S.set.sweep?'checked':''} style="width:22px;height:22px;accent-color:var(--green)"></label></div>
+ <h2>Obiettivi</h2><div class="list">${row('goal','1',esc(S.set.g1n),'investiti',S.set.g1?eu(S.set.g1):'—')}${row('goal','2',esc(S.set.g2n),'investiti',S.set.g2?eu(S.set.g2):'—')}</div>`}
+/* ---------- investimenti ---------- */
+function vInv(){const T=invTot(),C=costTot(),G=T-C,by={};S.inv.forEach(x=>by[x.tipo]=(by[x.tipo]||0)+val(x));const last=S.inv.reduce((m,x)=>x.agg&&x.agg>m?x.agg:m,''),age=last?Math.round((today()-new Date(last+'T00:00:00'))/864e5):null;
+ const hp=S.hist.filter(h=>h.I>0);
+ return`<h1>Investimenti</h1><div class="list hero"><small class="mut">Valore</small><p class="big" id="ibig">${eu(T)}</p><p class="sub" id="isub"><span class="${G>=0?'pos':'neg'}">${G>=0?'+':''}${eu(G,1)}${C?' ('+pct(G/C*100)+')':''}</span> rispetto a quanto hai versato</p>
+ ${hp.length>1?'<div class="fig" id="chI" style="height:150px"></div>':''}
+ <div class="split" aria-hidden="true">${Object.entries(by).map(([k,v],i)=>`<i style="flex:${v};background:${FCOL[(i+1)%FCOL.length]}"></i>`).join('')}</div>
+ <div style="display:flex;flex-wrap:wrap;gap:4px 14px">${Object.entries(by).map(([k,v],i)=>`<span style="font-size:13px;color:var(--mut);display:flex;align-items:center;gap:6px"><i class="dot" style="background:${FCOL[(i+1)%FCOL.length]}"></i>${TIPI[k]} ${T?Math.round(v/T*100):0}%</span>`).join('')}</div>
+ <button class="btn" data-act="prices">Aggiorna i prezzi</button>${age!=null?`<p class="hint" style="margin:8px 0 0;text-align:center">${age===0?'Aggiornati oggi':age===1?'Aggiornati ieri':`Ultimo aggiornamento ${age} giorni fa`}</p>`:''}</div>
  <h2>Posizioni</h2><div class="list">${S.inv.map(x=>{const g=val(x)-cost(x),c=cost(x);return`<button class="row chev" data-act="pos" data-id="${x.id}"><span class="t">${esc(x.n)}<span class="tag">${TIPI[x.tipo]}</span><small>${S.pac.some(p=>p.pos===x.id)?'PAC · ':''}${c?'versati '+eu(c):''}</small></span><span class="v"><b>${eu(val(x))}</b><br><small class="${g>=0?'pos':'neg'}">${c?pct(g/c*100):''}</small></span></button>`}).join('')}<button class="row add" data-act="pos">Aggiungi investimento</button></div>
- <p class="foot">Aggiorna i valori quando vuoi copiandoli da Fineco. Bussola tiene il conto e fa stime: non dà consigli d’investimento.</p>`}
-const V={riepilogo:vRie,piano:vPiano,investimenti:vInv};
-function render(){const h=location.hash.slice(1),k=V[h]?h:'riepilogo';document.querySelectorAll('#tabs a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+k));$('#view').innerHTML=V[k]();drawChart()}
-new ResizeObserver(()=>drawChart()).observe(document.body);
-/* fogli */
+ <p class="foot">Bussola tiene il conto e fa stime: non dà consigli d’investimento.</p>`}
+function invChart(){const hp=S.hist.filter(h=>h.I>0);if(hp.length<2||!$('#chI'))return;const labels=hp.map(h=>h.d.slice(0,7)),v=hp.map(h=>h.I);
+ chart('chI',{labels,split:-1,label:'Valore investimenti nel tempo',series:[{vals:v,color:'var(--blue)',fill:1}],tip:i=>`<span class="mut">${new Date(hp[i].d+'T00:00:00').toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'})}</span><br><b>${eu(v[i])}</b>`,
+  onScrub:i=>{const b=$('#ibig');if(b)b.textContent=eu(i==null?invTot():v[i])}})}
+const V={riepilogo:vRie,strategia:vStrat,spese:vSpese,investimenti:vInv};
+function render(){const h=location.hash.slice(1),k=V[h]?h:'riepilogo';document.querySelectorAll('#tabs a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+k));
+ Object.keys(CH).forEach(x=>delete CH[x]);$('#view').innerHTML=V[k]();if(k==='riepilogo')mainChart();if(k==='strategia')updSim();if(k==='investimenti')invChart()}
+/* ---------- fogli ---------- */
 function openSh(fn){sheetFn=fn;$('#sc').innerHTML=fn();$('#sheet').hidden=false;$('#sc').scrollTop=0;const f=$('#sc input');if(f&&matchMedia('(hover:hover)').matches)f.focus()}
 function closeSh(){sheetFn=null;$('#sheet').hidden=true}
-const nb=(t,act,id)=>`<div class="nb"><button data-act="close">Annulla</button><b>${t}</b><button data-act="${act}" ${id?`data-id="${id}"`:''}>Fine</button></div>`;
+const nb=(t,act,id,extra)=>`<div class="nb"><button data-act="close">Annulla</button><b>${t}</b><button data-act="${act}" ${id?`data-id="${id}"`:''} ${extra||''}>Fine</button></div>`;
 const fld=(id,lab,v,ph,type)=>`<div class="f"><label for="${id}">${lab}</label><input id="${id}" ${type==='month'?'type="month"':type==='text'?'':'inputmode="decimal"'} value="${esc(v??'')}" placeholder="${esc(ph||'')}"></div>`;
 const del=(act,id)=>id?`<button class="btn del" data-act="${act}" data-id="${id}">Elimina</button>`:'';
-const n2=v=>v==null||v===''?'':String(v).replace('.',',');
-const shInc=id=>()=>{const x=id?S.inc.find(y=>y.id===id):{};return nb(id?'Entrata':'Nuova entrata','sinc',id)+`<div class="list">${fld('e-n','Nome',x.n,'Stipendio','text')}${fld('e-i','Al mese €',n2(x.imp),'2000')}${fld('e-al','Fino a',x.al,'',  'month')}</div><p class="hint">Lascia vuoto "Fino a" se è un’entrata fissa senza fine.</p>${del('dinc',id)}`};
-const shFix=id=>()=>{const x=id?S.fix.find(y=>y.id===id):{freq:1};return nb(id?'Spesa':'Nuova spesa','sfix',id)+`<div class="list">${fld('f-n','Nome',x.n,'Affitto','text')}${fld('f-i','Importo €',n2(x.imp),'630')}<div class="f"><label for="f-q">Ogni</label><select id="f-q"><option value="1" ${+x.freq!==12?'selected':''}>mese</option><option value="12" ${+x.freq===12?'selected':''}>anno</option></select></div></div><p class="hint">Le spese annuali (assicurazione, bollo) vengono divise per 12.</p>${del('dfix',id)}`};
-const shAltre=()=>nb('Altre spese','saltre')+`<div class="list">${fld('a-i','Al mese €',n2(S.altre),'500')}</div><p class="hint">Tutto quello che non è fisso: spesa, benzina, uscite, regali.</p>`;
+const n2=v=>v==null||v===''?'':String(Math.round(v*100000)/100000).replace('.',',');
+const fOpts=sel=>S.folders.map(f=>`<option value="${f.id}" ${f.id===sel?'selected':''}>${esc(f.n)}</option>`).join('');
+const shInc=id=>()=>{const x=id?S.inc.find(y=>y.id===id):{};return nb(id?'Entrata':'Nuova entrata','sinc',id)+`<div class="list">${fld('e-n','Nome',x.n,'Stipendio','text')}${fld('e-i','Al mese €',n2(x.imp),'2000')}${fld('e-al','Fino a',x.al,'','month')}</div><p class="hint">Lascia vuoto "Fino a" se non finisce.</p>${del('dinc',id)}`};
+const shFix=(id,fo)=>()=>{const x=id?S.fix.find(y=>y.id===id):{freq:1,f:fo||'altro'};return nb(id?'Spesa':'Nuova spesa','sfix',id)+`<div class="list">${fld('f-n','Nome',x.n,'Affitto','text')}${fld('f-i','Importo €',n2(x.imp),'630')}<div class="f"><label for="f-q">Ogni</label><select id="f-q"><option value="1" ${+x.freq!==12?'selected':''}>mese</option><option value="12" ${+x.freq===12?'selected':''}>anno</option></select></div><div class="f"><label for="f-f">Cartella</label><select id="f-f">${fOpts(x.f)}</select></div></div><p class="hint">Le spese annuali vengono divise per 12.</p>${del('dfix',id)}`};
+const shFolder=id=>()=>{const x=id?S.folders.find(f=>f.id===id):{};return nb(id?'Cartella':'Nuova cartella','sfold',id)+`<div class="list">${fld('fo-n','Nome',x.n,'es. Viaggi','text')}</div>${id&&S.folders.length>1?`<button class="btn del" data-act="dfold" data-id="${id}">Elimina cartella</button><p class="hint">Le spese dentro finiscono in un’altra cartella, non vengono cancellate.</p>`:''}`};
+const shAltre=()=>nb('Altre spese','saltre')+`<div class="list">${fld('a-i','Al mese €',n2(S.altre),'500')}</div><p class="hint">Tutto quello che non è fisso: spesa, benzina, uscite.</p>`;
 const shPac=id=>()=>{const x=id?S.pac.find(y=>y.id===id):{};return nb(id?'PAC':'Nuovo PAC','spac',id)+`<div class="list">${fld('p-n','Nome',x.n,'Fineco AM Passive','text')}${fld('p-i','Al mese €',n2(x.imp),'500')}${fld('p-g','Giorno',x.g,'3')}<div class="f"><label for="p-pos">Su</label><select id="p-pos"><option value="">—</option>${S.inv.map(i=>`<option value="${i.id}" ${x.pos===i.id?'selected':''}>${esc(i.n)}</option>`).join('')}</select></div></div>${del('dpac',id)}`};
 const shPlan=id=>()=>{const x=id?S.plan.find(y=>y.id===id):{mese:addYM(nowYM(),2)};return nb(id?'Spesa prevista':'Nuova spesa prevista','splan',id)+`<div class="list">${fld('s-n','Nome',x.n,'Caparra affitto','text')}${fld('s-i','Importo €',n2(x.imp),'1100')}${fld('s-m','Mese',x.mese,'','month')}</div>${del('dplan',id)}`};
-const shLiq=()=>nb('Liquidità','sliq')+`<div class="list">${fld('l-v','Sul conto oggi €',n2(S.liq.val),'5000')}</div><p class="hint">Copiala dal saldo del conto Fineco. Aggiornala quando vuoi.</p>`;
-const shCus=()=>nb('Cuscinetto','scus')+`<div class="list">${fld('c-v','Tengo fermi €',n2(S.set.cus),'5000')}</div><p class="hint">I soldi per gli imprevisti. Più è grande, più sei tranquillo; più è piccolo, più investi. Spesso si tengono da 3 a 6 mesi di spese: per te sarebbero ${eu(speseM()*3)}–${eu(speseM()*6)}.</p>`;
+const shLiq=()=>nb('Liquidità','sliq')+`<div class="list">${fld('l-v','Sul conto oggi €',n2(S.liq.val),'5000')}</div><p class="hint">Copiala dal saldo del conto.</p>`;
+const shCus=()=>nb('Cuscinetto','scus')+`<div class="list">${fld('c-v','Tengo fermi €',n2(S.set.cus),'5000')}</div><p class="hint">Spesso si tengono da 3 a 6 mesi di spese: per te ${eu(speseM()*3)}–${eu(speseM()*6)}.</p>`;
 const shGoal=k=>()=>nb('Obiettivo','sgoal',k)+`<div class="list">${fld('g-n','Nome',S.set['g'+k+'n'],'Prossimo traguardo','text')}${fld('g-t','Investiti €',n2(S.set['g'+k]),'100000')}</div>`;
+const gl=x=>x.isin?`<a href="https://www.google.com/search?q=${encodeURIComponent(x.isin+' prezzo')}" target="_blank" rel="noopener">cerca</a>`:'';
 function shPos(id){return()=>{const x=id?S.inv.find(y=>y.id===id):{tipo:'etf'};return nb(id?'Investimento':'Nuovo investimento','spos',id)+`<div class="list">${fld('i-n','Nome',x.n,'ETF azionario mondo','text')}<div class="f"><label for="i-t">Tipo</label><select id="i-t">${Object.entries(TIPI).map(([k,v])=>`<option value="${k}" ${x.tipo===k?'selected':''}>${v}</option>`).join('')}</select></div>${fld('i-v','Valore attuale €',n2(x.qty&&x.px?'':x.val),x.qty&&x.px?eu(val(x),1)+' (da quote)':'10000')}${fld('i-c','Versati €',n2(x.cost),'9500')}</div>
- <details ${x.qty?'open':''}><summary>Quote e prezzi (facoltativo)</summary><div class="list">${fld('i-q','Quote',n2(x.qty),'40')}${fld('i-pm','Prezzo medio',n2(x.pmc),'124,33')}${fld('i-px','Prezzo attuale',n2(x.px),'132,61')}${fld('i-isin','ISIN',x.isin,'','text')}</div><p class="hint">Se inserisci quote e prezzo attuale, il valore si calcola da solo.</p></details>${del('dpos',id)}`}}
-function shSet(){const st='I dati restano solo su questo iPhone. Fai un backup ogni tanto: lo salvi in File o te lo mandi.';
- return`<div class="nb"><span></span><b>Impostazioni</b><button data-act="sset">Fine</button></div><div class="list">${fld('x-r','Rendimento stimato %',n2(S.set.resa),'4')}<div class="f"><label for="x-o">Grafico</label><select id="x-o">${[12,24,36,60].map(n=>`<option value="${n}" ${+S.set.oriz===n?'selected':''}>${n} mesi</option>`).join('')}</select></div></div>
+ <details ${x.qty?'open':''}><summary>Quote e prezzi (facoltativo)</summary><div class="list">${fld('i-q','Quote',n2(x.qty),'40')}${fld('i-pm','Prezzo medio',n2(x.pmc),'124,33')}${fld('i-px','Prezzo attuale',n2(x.px),'132,61')}${fld('i-isin','ISIN',x.isin,'','text')}</div></details>${del('dpos',id)}`}}
+const shPrices=()=>nb('Aggiorna i prezzi','sprices')+`<div class="list">${S.inv.map(x=>`<div class="f"><label for="pr-${x.id}" style="max-width:62%;font-size:15px">${esc(x.n)}<br><small class="mut">${x.qty&&x.px?'prezzo per quota':'valore totale €'}</small> ${gl(x)}</label><input id="pr-${x.id}" inputmode="decimal" value="${n2(x.qty&&x.px?x.px:x.val)}"></div>`).join('')}</div><p class="hint">Copia i prezzi dall’app Fineco (P. mercato). "cerca" apre la ricerca dell’ISIN.</p>`;
+const shCheck=()=>{const m=month(addYM(nowYM(),1));return nb('Chiudi il mese','scheck')+`<p class="hint" style="margin:0 16px 10px">Due minuti: aggiorni i numeri e vedi come è andata.</p><div class="list">${fld('k-l','Sul conto oggi €',n2(S.liq.val),'5000')}${fld('k-i','Investito questo mese €',n2(m.inv),String(m.inv))}</div>
+ <button class="btn sec" data-act="prices2">Aggiorna anche i prezzi</button>`};
+function shSet(){const st=window.claude?(cloud==='ok'?'Dati salvati nel tuo account.':'Dati salvati su questo dispositivo.'):'I dati restano solo su questo iPhone. Fai un backup ogni tanto.';
+ return`<div class="nb"><span></span><b>Impostazioni</b><button data-act="sset">Fine</button></div><div class="list">${fld('x-r','Rendimento stimato %',n2(S.set.resa),'4')}</div>
  <p class="hint">${st}</p><div class="list" style="margin-top:20px"><button class="row add" data-act="export">Scarica backup</button><label class="row add" for="bk" style="cursor:pointer">Carica backup</label></div><input id="bk" type="file" accept=".json" hidden>
- <p class="hint">Bussola v1.0 app · Strumento di calcolo personale, non consulenza finanziaria.</p>`}
-/* azioni */
-document.addEventListener('click',async e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,id=b.dataset.id,g=s=>(($(s)||{}).value??'').trim(),n=s=>num(g(s));
- const O={close:closeSh,settings:()=>openSh(shSet),inc:()=>openSh(shInc(id)),fix:()=>openSh(shFix(id)),altre:()=>openSh(shAltre),pac:()=>openSh(shPac(id)),plan:()=>openSh(shPlan(id)),liq:()=>openSh(shLiq),cus:()=>openSh(shCus),goal:()=>openSh(shGoal(id)),pos:()=>openSh(shPos(id))};
+ <p class="hint">Bussola v2.0 · Strumento di calcolo personale, non consulenza finanziaria.</p>`}
+/* ---------- azioni ---------- */
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,id=b.dataset.id,g=s=>(($(s)||{}).value??'').trim(),n=s=>num(g(s));if(b.tagName==='A'&&b.getAttribute('href')==='#')e.preventDefault();
+ const O={close:closeSh,settings:()=>openSh(shSet),inc:()=>openSh(shInc(id)),fix:()=>openSh(shFix(id,b.dataset.f)),altre:()=>openSh(shAltre),pac:()=>openSh(shPac(id)),plan:()=>openSh(shPlan(id)),liq:()=>openSh(shLiq),cus:()=>openSh(shCus),goal:()=>openSh(shGoal(id)),pos:()=>openSh(shPos(id)),
+  prices:()=>openSh(shPrices),check:()=>openSh(shCheck),folder:()=>openSh(shFolder(id)),go:()=>{location.hash='#'+b.dataset.h},
+  tfold:()=>{open[id]=!open[id];render()},vista:()=>{S.set.vista=b.dataset.v;save();render()},rng:()=>{S.set.rng=+b.dataset.v;save();render()},
+  preset:()=>{const p=PRESETS[+b.dataset.i][1];SIM.pct=p.pct;SIM.cus=cusVal(p.cus);SIM.invNow=!!p.invNow;$('#rPct').value=SIM.pct;$('#rCus').value=SIM.cus;$('#rNow').checked=SIM.invNow;updSim()},
+  simreset:()=>{SIM=null;render()},
+  apply:()=>{S.set.pct=SIM.pct;S.set.cus=SIM.cus;S.set.resa=SIM.resa;const ds=SIM.spese-speseM(),now=SIM.invNow?Math.max(0,liq()-SIM.cus-upcoming(nowYM(),6)):0;if(Math.abs(ds)>=1)S.altre=Math.max(0,Math.round((+S.altre||0)+ds));save();SIM=null;render();toast(now>0?`Piano aggiornato. Ricordati di investire ${eu(now)} dal conto`:Math.abs(ds)>=1?'Piano aggiornato: ho corretto le altre spese':'Piano aggiornato')}};
  if(O[a]){O[a]();return}
  const up=(arr,o)=>{if(id)Object.assign(arr.find(x=>x.id===id),o);else arr.push({id:uid(),...o})},rm=k=>{S[k]=S[k].filter(x=>x.id!==id)};
- if(a==='preset'){S.set.pct=+b.dataset.p}
- else if(a==='sinc'){if(!(n('#e-i')>0)){toast('Scrivi l’importo');return}up(S.inc,{n:g('#e-n')||'Entrata',imp:n('#e-i'),al:g('#e-al')})}
- else if(a==='sfix'){if(!(n('#f-i')>0)){toast('Scrivi l’importo');return}up(S.fix,{n:g('#f-n')||'Spesa',imp:n('#f-i'),freq:+g('#f-q')||1})}
+ if(a==='sinc'){if(!(n('#e-i')>0)){toast('Scrivi l’importo');return}up(S.inc,{n:g('#e-n')||'Entrata',imp:n('#e-i'),al:g('#e-al')})}
+ else if(a==='sfix'){if(!(n('#f-i')>0)){toast('Scrivi l’importo');return}up(S.fix,{n:g('#f-n')||'Spesa',imp:n('#f-i'),freq:+g('#f-q')||1,f:g('#f-f')});open[g('#f-f')]=true}
+ else if(a==='sfold'){const nm=g('#fo-n');if(!nm){toast('Scrivi il nome');return}if(id)S.folders.find(f=>f.id===id).n=nm;else{const fid='f'+uid();S.folders.push({id:fid,n:nm});open[fid]=true}}
+ else if(a==='dfold'){S.folders=S.folders.filter(f=>f.id!==id);const to=S.folders.find(f=>f.id==='altro')||S.folders[0];S.fix.forEach(x=>{if(x.f===id)x.f=to.id})}
  else if(a==='saltre'){S.altre=n('#a-i')||0}
  else if(a==='spac'){if(!(n('#p-i')>0)){toast('Scrivi l’importo');return}up(S.pac,{n:g('#p-n')||'PAC',imp:n('#p-i'),g:g('#p-g'),pos:g('#p-pos')})}
  else if(a==='splan'){if(!(n('#s-i')>0)){toast('Scrivi l’importo');return}up(S.plan,{n:g('#s-n')||'Spesa prevista',imp:n('#s-i'),mese:g('#s-m')||addYM(nowYM(),1)})}
- else if(a==='sliq'){const v=n('#l-v');S.liq={val:isNaN(v)?null:v,data:iso(today())}}
- else if(a==='scus'){S.set.cus=n('#c-v')||0}
+ else if(a==='sliq'){const v=n('#l-v');S.liq={val:isNaN(v)?null:v,data:iso(today())};snap()}
+ else if(a==='scus'){S.set.cus=n('#c-v')||0;SIM=null}
  else if(a==='sgoal'){S.set['g'+id+'n']=g('#g-n')||(id==='1'?'Prossimo traguardo':'Obiettivo finale');S.set['g'+id]=n('#g-t')||null}
- else if(a==='spos'){if(!g('#i-n')){toast('Scrivi il nome');return}const q=n('#i-q'),px=n('#i-px');up(S.inv,{n:g('#i-n'),tipo:g('#i-t'),val:isNaN(n('#i-v'))?(q&&px?q*px:0):n('#i-v'),cost:n('#i-c')||'',qty:q||'',pmc:n('#i-pm')||'',px:px||'',isin:g('#i-isin').toUpperCase(),agg:iso(today())})}
- else if(a==='sset'){S.set.resa=isNaN(n('#x-r'))?0:n('#x-r');S.set.oriz=+g('#x-o')||36}
- else if(a==='dinc')rm('inc');else if(a==='dfix')rm('fix');else if(a==='dpac')rm('pac');else if(a==='dplan')rm('plan');else if(a==='dpos'){rm('inv');S.pac.forEach(p=>{if(p.pos===id)p.pos=''})}
- else if(a==='export'){const name='bussola-backup-'+iso(today())+'.json',data=JSON.stringify(S,null,1);try{const f=new File([data],name,{type:'application/json'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Backup Bussola'});return}const u=URL.createObjectURL(f),l=document.createElement('a');l.href=u;l.download=name;document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);toast('Backup salvato')}catch(err){if(err&&err.name!=='AbortError')toast('Backup non riuscito')}return}
+ else if(a==='spos'){if(!g('#i-n')){toast('Scrivi il nome');return}const q=n('#i-q'),px=n('#i-px');up(S.inv,{n:g('#i-n'),tipo:g('#i-t'),val:isNaN(n('#i-v'))?(q&&px?q*px:0):n('#i-v'),cost:n('#i-c')||'',qty:q||'',pmc:n('#i-pm')||'',px:px||'',isin:g('#i-isin').toUpperCase(),agg:iso(today())});snap()}
+ else if(a==='sprices'||a==='prices2'){if(a==='sprices'){const before=invTot();S.inv.forEach(x=>{const v=n('#pr-'+x.id);if(!isNaN(v)&&v>0){if(x.qty&&x.px)x.px=v;else x.val=v;x.agg=iso(today())}});snap();const d=invTot()-before;closeSh();save();render();toast(Math.abs(d)<1?'Prezzi aggiornati':`Prezzi aggiornati: ${sg(d)}`);return}
+  const v=n('#k-l');if(!isNaN(v))S.liq={val:v,data:iso(today())};snap();save();openSh(shPrices);return}
+ else if(a==='scheck'){const v=n('#k-l'),before=S.hist.length?S.hist[S.hist.length-1]:null;if(!isNaN(v))S.liq={val:v,data:iso(today())};const cur=nowYM();S.checks=S.checks.filter(c=>c.ym!==cur);S.checks.push({ym:cur,inv:n('#k-i')||0});snap();
+  const now=liq()+invTot(),prev=before?before.L+before.I:null;closeSh();save();render();toast(prev!=null&&before.d<iso(today())?`Mese chiuso: patrimonio ${sg(now-prev)}`:`Mese chiuso · ${streak()} di fila`);return}
+ else if(a==='sset'){S.set.resa=isNaN(n('#x-r'))?0:n('#x-r');SIM=null}
+ else if(a==='dinc')rm('inc');else if(a==='dfix')rm('fix');else if(a==='dpac')rm('pac');else if(a==='dplan')rm('plan');else if(a==='dpos'){rm('inv');S.pac.forEach(p=>{if(p.pos===id)p.pos=''});snap()}
+ else if(a==='export'){const name='bussola-backup-'+iso(today())+'.json',data=JSON.stringify(S,null,1);try{const dl=window.claude&&await claude.use('downloads');if(dl){await dl.save({filename:name,data});toast('Backup scaricato');return}
+  const f=new File([data],name,{type:'application/json'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Backup Bussola'});return}const u=URL.createObjectURL(f),l=document.createElement('a');l.href=u;l.download=name;document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000)}catch(err){if(err&&err.name!=='AbortError'&&err.code!=='declined')toast('Backup non riuscito')}return}
  else return;closeSh();save();render()});
-document.addEventListener('input',e=>{if(e.target.id!=='pct')return;S.set.pct=+e.target.value;$('#pctv').textContent=S.set.pct+'%';$('#split').innerHTML=legend(month(addYM(nowYM(),1)));document.querySelectorAll('[data-act=preset]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.p==S.set.pct))});
-document.addEventListener('change',async e=>{const t=e.target;if(t.id==='pct'){save();render()}
- else if(t.id==='sweep'){S.set.sweep=t.checked;save();render()}
- else if(t.id==='bk'&&t.files[0]){try{const X=JSON.parse(await t.files[0].text());if(!X||!Array.isArray(X.inv))throw 0;S=norm(X);save();closeSh();render();toast('Backup caricato')}catch(err){toast('File non valido')}}});
+document.addEventListener('input',e=>{const t=e.target;if(!SIM||!t.id||!/^r(Pct|Cus|Sp|Re)$/.test(t.id))return;const k={rPct:'pct',rCus:'cus',rSp:'spese',rRe:'resa'}[t.id];SIM[k]=+t.value;updSim()});
+document.addEventListener('change',async e=>{const t=e.target;if(t.id==='rNow'){SIM.invNow=t.checked;updSim()}
+ else if(t.id==='sweep'){S.set.sweep=t.checked;SIM=null;save();render()}
+ else if(t.id==='bk'&&t.files[0]){try{const X=JSON.parse(await t.files[0].text());if(!X||!Array.isArray(X.inv))throw 0;S=norm(X);snap();save();closeSh();render();toast('Backup caricato')}catch(err){toast('File non valido')}}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#sheet').hidden)closeSh()});
-addEventListener('hashchange',()=>{scrollTo(0,0);render()});render();
-if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+addEventListener('hashchange',()=>{scrollTo(0,0);render()});
+if(!S.hist.length&&(S.liq.val!=null||S.inv.length)){snap();save()}
+render();if('serviceWorker' in navigator&&!window.claude)navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
 </script>
 </body>
