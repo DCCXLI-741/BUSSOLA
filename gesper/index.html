@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="GE.S.PER.">
-<meta name="theme-color" content="#1F3864">
+<meta name="theme-color" content="#F2F2F7">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <title>GE.S.PER. – Gestione Scadenze del Personale</title>
@@ -388,6 +388,107 @@ nav .ni{font-style:normal;margin-right:5px}nav .ns{display:none}
   .ubox{box-shadow:none;break-inside:avoid}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+
+/* =============== GRAFICA iPHONE (html.ios) =============== */
+html.ios{--navy:#1c1c1e;--blue:#007AFF;--head:#F2F2F7;--input:#F2F2F7;--line:#E5E5EA;--bg:#F2F2F7;--card:#fff;--text:#000;--muted:#8E8E93;--red:#FF3B30;--redbg:#FFE5E3;--green:#248A3D;--greenbg:#DDF6E3;--warn:#C93400;--warnbg:#FFF0D9;--grey:#F2F2F7}
+html.ios body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;font-size:15px;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;background:#F2F2F7}
+html.ios header{position:relative;z-index:40;background:rgba(242,242,247,.97);color:#000;text-align:left;padding:env(safe-area-inset-top) 16px 0;border-bottom:.5px solid rgba(60,60,67,.18)}
+html.ios header h1,html.ios header .sub,html.ios header .credit{display:none}
+#ihead{display:none}html.ios #ihead{display:block}
+.ih-top{display:flex;align-items:center;justify-content:space-between;min-height:40px;gap:10px}
+.ih-app{font-size:13px;font-weight:600;color:#8E8E93;letter-spacing:.5px}
+.ih-back{font:inherit;font-size:17px;color:#007AFF;background:none;border:0;padding:0;cursor:pointer}
+.ih-sync{font-size:12px;color:#8E8E93;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%}
+.ih-sync::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:#34C759;margin-right:5px;vertical-align:1px}
+.ih-sync.busy::before{background:#FF9500}.ih-sync.err::before{background:#FF3B30}.ih-sync.ro::before{background:#8E8E93}
+.ih-title{font-size:32px;font-weight:700;letter-spacing:.2px;line-height:1.15;margin:0 0 6px;color:#000}
+.ih-sub{font-size:13px;color:#8E8E93;margin:-4px 0 10px}
+html.ios .toolbar{display:none}
+html.ios nav{margin:0}
+html.ios nav .nsub{display:none}
+html.ios nav .nmain{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;flex-wrap:nowrap;justify-content:space-around;gap:0;overflow:visible;background:rgba(249,249,249,.94);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid rgba(60,60,67,.29);box-shadow:none;padding:6px 0 calc(2px + env(safe-area-inset-bottom))}
+html.ios nav .nmain button{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;background:none;border:0;border-radius:0;padding:0 0 2px;color:#8E8E93;font-size:10px;font-weight:500;position:relative;min-width:0}
+html.ios nav .nmain button.on{color:#007AFF;background:none}
+html.ios .tabi{position:relative;display:block;width:27px;height:27px}html.ios .tabi svg{width:27px;height:27px}
+html.ios nav .nmain .bub{position:absolute;top:-3px;left:17px;right:auto;background:#FF3B30;font-size:10.5px;font-weight:600;padding:0 5px;border-radius:9px;min-width:18px;line-height:18px;text-align:center;margin:0}
+html.ios main{max-width:820px;padding:12px 16px calc(96px + env(safe-area-inset-bottom))}
+html.ios .card{border:0;border-radius:12px;box-shadow:none;padding:14px 16px;margin-bottom:16px}
+html.ios h2{font-size:20px;font-weight:700;color:#000;letter-spacing:.2px}
+html.ios h3{color:#000;font-weight:600}
+html.ios .btn{font-family:inherit;border:0;background:rgba(0,122,255,.1);color:#007AFF;border-radius:10px;font-weight:600;font-size:15px;padding:9px 14px}
+html.ios .btn.pri{background:#007AFF;color:#fff}
+html.ios .btn.sm{padding:6px 10px;font-size:13px;border-radius:8px}
+html.ios .btn.danger,html.ios .btn.del{color:#FF3B30;background:rgba(255,59,48,.1)}
+html.ios input[type=text],html.ios input[type=search],html.ios input[type=number],html.ios input[type=date],html.ios input[type=password],html.ios select,html.ios textarea{font-family:inherit;font-size:16px;border:0;border-radius:10px;background:#F2F2F7;padding:9px 11px;color:#000;-webkit-appearance:none;appearance:none}
+html.ios select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%238E8E93' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
+html.ios input:focus,html.ios select:focus,html.ios textarea:focus{outline:2px solid rgba(0,122,255,.35)}
+html.ios .fld>span,html.ios .sel>b,html.ios .sel>label>b{font-size:13px;color:#8E8E93;font-weight:500}
+html.ios .hint{color:#8E8E93;font-size:13px}
+html.ios #view .card>p.hint:not(.tghint){display:none}
+html.ios .kpi{border:0;background:#F2F2F7;border-radius:12px}
+html.ios .kpi b{font-weight:700;color:#000}
+html.ios .card table:not(.tgr){border-collapse:collapse}
+html.ios .card table:not(.tgr) th{background:transparent;color:#8E8E93;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.3px;border:0;border-bottom:.5px solid #C6C6C8}
+html.ios .card table:not(.tgr) td{border:0;border-bottom:.5px solid #E5E5EA}
+html.ios table a{color:#007AFF;font-weight:600;text-decoration:none}
+html.ios .tmodes{display:flex;background:rgba(118,118,128,.12);border-radius:9px;padding:2px;gap:0}
+html.ios .tmodes button{flex:1;border:0;background:none;color:#000;font-family:inherit;font-size:13px;font-weight:600;padding:7px 6px;border-radius:7px}
+html.ios .tmodes button.on{background:#fff;color:#000;box-shadow:0 3px 8px rgba(0,0,0,.12),0 1px 1px rgba(0,0,0,.04)}
+html.ios .toast{background:rgba(30,30,30,.92);border-radius:22px;padding:10px 18px;font-size:14px;bottom:calc(92px + env(safe-area-inset-bottom))!important;z-index:70}
+html.ios .modal{background:rgba(0,0,0,.35);z-index:60}
+html.ios .mbox{border-radius:14px}
+html.ios .ronote{border-radius:12px}
+html.ios .gate{background:#F2F2F7;padding:calc(30px + env(safe-area-inset-top)) 16px 30px}
+html.ios .gbox{border:0;box-shadow:none;background:transparent;padding:10px 4px}
+html.ios .glogo{font-size:34px;font-weight:800;color:#000;letter-spacing:1px}
+html.ios .gbox h2{font-size:22px;margin-top:22px}
+html.ios .gbtns{display:flex;flex-direction:column;gap:10px}
+html.ios .gbtns .btn{width:100%;padding:13px;font-size:17px;border-radius:12px}
+html.ios .gbox input{background:#fff}
+html.ios .tgpal{background:#F2F2F7;border:0;border-radius:12px}
+html.ios .tgb{border:0;border-radius:8px;background:#fff;font-family:inherit}
+html.ios .bk,html.ios .syncst{display:none}
+html.ios .qt tr.qu td{background:#F2F2F7;border-top:.5px solid #D1D1D6}
+html.ios .qt tr.qu.lv0 td{background:#E5E5EA;color:#000}html.ios .qt tr.qu.lv1 td{background:#EDEDF2}
+html.ios .qt tr.qu.lv0 td.c.ok{background:#DDF6E3;color:#1d6b33}html.ios .qt tr.qu.lv0 td.c.ko{background:#FFE5E3;color:#B3261E}html.ios .qt tr.qu.lv0 td.c.warn{background:#FFF0D9;color:#8a4b00}html.ios .qt tr.qu.lv0 td.c.nd{background:#E5E5EA;color:#8E8E93}
+html.ios .uh,html.ios .ubox .uh{background:#1c1c1e}
+.iav{width:36px;height:36px;border-radius:50%;background:linear-gradient(#A2A7B5,#858A98);color:#fff;font-weight:600;font-size:16px;display:flex;align-items:center;justify-content:center;flex:0 0 36px}
+.idot{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 4px 0 2px;vertical-align:0}
+.iwide{width:100%;margin-top:10px;padding:12px!important}
+html.ios .isearch{width:100%}
+html.ios .modal{align-items:flex-end;justify-content:center;padding:0}
+html.ios .mbox{width:100%!important;max-width:620px!important;min-height:0;border-radius:14px 14px 0 0!important;padding:18px 16px calc(18px + env(safe-area-inset-bottom))!important;max-height:92vh;overflow:auto;animation:isheet .25s ease-out}
+@keyframes isheet{from{transform:translateY(40%);opacity:.4}to{transform:none;opacity:1}}
+html.ios .mbox h2{text-align:center;font-size:17px;font-weight:600}
+html.ios .mbox .row-actions{display:flex;flex-direction:column-reverse;gap:8px;margin-top:14px}
+html.ios .mbox .row-actions .btn{width:100%;padding:13px;font-size:17px;border-radius:12px}
+html.ios .mbox .fld{margin-bottom:10px}
+.isnav{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px;color:#8E8E93;font-size:13px}
+html.ios .tgr .nm{min-width:0;max-width:none;padding:0 6px}
+html.ios .tgr td.nm>a{display:block;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+html.ios .tgr thead .nm{font-size:11px;color:#8E8E93;font-weight:600}
+html.ios .tgr th,html.ios .tgr td{height:32px}
+html.ios .tgr td.gc,html.ios .tgr .dh{width:34px;min-width:34px}
+html.ios .tgr tr.gu.lv0 td,html.ios .tgr tr.gu.lv1 td,html.ios .tgr tr.gu.lv2 td,html.ios .tgr tr.gu.lv3 td{background:#F2F2F7}
+html.ios .tgr tr.gu td.nm{color:#000}
+html.ios .tgr th.td{background:#007AFF}
+html.ios .tgr td.gc.td{box-shadow:inset 2px 0 0 #007AFF,inset -2px 0 0 #007AFF}
+html.ios #view .card>.gbar>.hint{display:none}
+/* pagina «Altro»: elenchi raggruppati come nelle Impostazioni di iPhone */
+.ialtro{max-width:620px;margin:0 auto}
+.igh{font-size:13px;color:#8E8E93;text-transform:uppercase;letter-spacing:.3px;margin:0 16px 6px}
+.ig{background:#fff;border-radius:12px;margin:0 0 24px;overflow:hidden}
+.ir{display:flex;align-items:center;gap:12px;width:100%;background:#fff;border:0;padding:9px 14px;font-family:inherit;font-size:17px;color:#000;text-align:left;position:relative;cursor:pointer;min-height:48px}
+.ir:active{background:#E5E5EA}
+.ir+.ir::before{content:"";position:absolute;top:0;left:55px;right:0;border-top:.5px solid #C6C6C8}
+.ir .ic{width:29px;height:29px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;flex:0 0 29px}
+.ir .tx{flex:1;min-width:0}.ir .sub{display:block;font-size:13px;color:#8E8E93;margin-top:1px}
+.ir .chev::after{content:"›";color:#C7C7CC;font-size:24px;line-height:1}
+.ir.red .tx{color:#FF3B30}
+.iuser{display:flex;align-items:center;gap:14px;padding:14px 16px}
+.iu-av{width:56px;height:56px;border-radius:50%;background:linear-gradient(#A2A7B5,#858A98);color:#fff;font-size:24px;font-weight:600;display:flex;align-items:center;justify-content:center;flex:0 0 56px}
+.iu-n{font-size:19px;font-weight:600}.iu-r{font-size:13px;color:#8E8E93;margin-top:2px}
+.ifoot{text-align:center;color:#8E8E93;font-size:12px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -395,6 +496,7 @@ nav .ni{font-style:normal;margin-right:5px}nav .ns{display:none}
   <h1>GE.S.PER.</h1>
   <div class="sub" id="hsub"></div>
   <div class="credit" id="credit"></div>
+  <div id="ihead"></div>
   <nav id="nav"></nav>
 </header>
 <main>
@@ -538,6 +640,11 @@ S=fix(S&&Array.isArray(S.people)?S:seed());   // dati già presenti su questo PC
 try{const u=JSON.parse(localStorage.getItem(UIKEY));if(u)Object.assign(S.ui,u)}catch(e){}
 // copia dei dati presenti su questo PC all'avvio: serve per creare o ripristinare un archivio anche dopo un'uscita
 const LOCAL0=JSON.stringify({units:S.units,pfields:S.pfields,sheets:S.sheets,people:S.people,entries:S.entries,madre:S.madre,warn:S.warn,folder:S.folder,gradi:S.gradi,v:S.v});
+// archivio nuovo e vuoto: solo la tua unità (e, se indicata, quella superiore), fogli standard, nessun militare
+function cleanData(unitName,upName,num){
+  const o=seed(),U=(name,parentId,n)=>({id:uid(),name,parentId:parentId||"",num:n==null?"":n});
+  const up=upName?U(upName,""):null,me=U(unitName,up?up.id:"",num===""?"":+num||"");
+  o.units=up?[up,me]:[me];o.people=[];o.entries=[];o.madre=upName||unitName;return o}
 function localData(){const o=fix(JSON.parse(LOCAL0));return o.sheets.length?o:seed()}
 
 let saveT,IDX=null;
@@ -551,7 +658,7 @@ function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");cl
 // degli altri utenti record per record (vince la modifica più recente), poi il file viene riscritto.
 const ARR=["units","pfields","sheets","people","entries","users"],CFG=["madre","warn","folder","gradi"];
 let FH=null,RO=false,ME_ID=null,BASE=null,syncing=false,syncAgain=false,dirty=false,SYNC={c:"busy",t:""},SCOPE,lastAct=Date.now(),fails=0,lockUntil=0;
-const APP="GE.S.PER.",APPL="Gestione Scadenze del Personale",VER="3.5",VERDATE="18/11/2026",CREDIT=`realizzato da MIMMO.MOTRA · versione ${VER} del ${VERDATE}`;
+const APP="GE.S.PER.",APPL="Gestione Scadenze del Personale",VER="3.6",VERDATE="18/11/2026",CREDIT=`realizzato da MIMMO.MOTRA · versione ${VER} del ${VERDATE}`;
 const JTYPES=[{description:"Archivio GE.S.PER.",accept:{"application/json":[".json"]}}];
 const sigR=r=>JSON.stringify(r,(k,v)=>k==="_u"||k==="_by"?undefined:v);
 const sobj=o=>JSON.stringify(Object.keys(o||{}).sort().map(k=>[k,o[k]]));
@@ -594,7 +701,7 @@ async function readArchive(file){
 async function writeArchive(d){const w=await FH.createWritable();await w.write(JSON.stringify(d));await w.close()}
 function hhmm(d){return pad(d.getHours())+":"+pad(d.getMinutes())}
 function fmtDT(x){const d=new Date(x);return isNaN(d)?"":pad(d.getDate())+"/"+pad(d.getMonth()+1)+"/"+d.getFullYear()+" "+hhmm(d)}
-function setSync(c,t){SYNC={c,t};const e=$("#syncst");if(e){e.className="syncst "+c;e.textContent=t}}
+function setSync(c,t){SYNC={c,t};const e=$("#syncst");if(!e)return;if(IOS){e.className="ih-sync "+c;return}e.className="syncst "+c;e.textContent=t}
 async function sync(poll){
   if(!FH||!ME_ID)return;
   if(syncing){syncAgain=true;return}
@@ -939,10 +1046,45 @@ function datalists0(){
 }
 
 // ---------- render
+// ---------- grafica iPhone (app installata / archivio sul dispositivo)
+const IOS=LOCALMODE();
+if(IOS)document.documentElement.classList.add("ios");
+const SVG=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const TABI={quadro:SVG('<rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>'),
+  tras:SVG('<rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><path d="M8.5 15l2.4 2.4 4.6-4.6"/>'),
+  scad:SVG('<circle cx="12" cy="12.5" r="8.5"/><path d="M12 8v4.5l3 2"/><path d="M4.5 4.5l2 -1.5M19.5 4.5l-2-1.5"/>'),
+  pers:SVG('<circle cx="9" cy="8" r="3.6"/><path d="M2.5 20.5c.6-3.7 3.2-5.8 6.5-5.8s5.9 2.1 6.5 5.8"/><circle cx="17.2" cy="8.8" r="2.8"/><path d="M16.8 14.7c2.7.2 4.4 2 5 5"/>'),
+  altro:SVG('<circle cx="12" cy="12" r="9"/><circle cx="7.8" cy="12" r=".6" fill="currentColor"/><circle cx="12" cy="12" r=".6" fill="currentColor"/><circle cx="16.2" cy="12" r=".6" fill="currentColor"/>')};
+function tabTitle(t){const sh=sheet(t);return sh?sh.name:({quadro:"Quadro",tras:"Presenze",scad:"Scadenze",pers:"Personale",scheda:"Scheda militare",org:"Organico",imp:"Impostazioni",acc:"Account",altro:"Altro"}[t]||"")}
+function renderNavIOS(n){
+  const t=S.ui.tab,main=[["quadro","Quadro"],["tras","Presenze"],["scad","Scadenze"],["pers","Personale"],["altro","Altro"]];
+  const inMain=main.some(m=>m[0]===t),back=t==="scheda"&&S.ui.from&&S.ui.from!=="altro"?S.ui.from:"altro",act=inMain?t:back;
+  $("#nav").innerHTML=`<div class="nmain">${main.map(([id,l])=>`<button data-tab="${id}" class="${act===id?"on":""}"><span class="tabi">${TABI[id]}${id==="scad"&&n?`<span class="bub">${n>99?"99+":n}</span>`:""}</span><span>${l}</span></button>`).join("")}</div>`;
+  const u=me(),un=S.ui.fUnit&&unit(S.ui.fUnit)?unit(S.ui.fUnit).name:(norm(S.madre)||"");
+  $("#ihead").innerHTML=`<div class="ih-top">${inMain?`<span class="ih-app">GE.S.PER.</span>`:`<button class="ih-back" data-tab="${back}">‹ ${esc(tabTitle(back))}</button>`}<span class="ih-sync ${SYNC.c}" id="syncst">${SYNC.c==="err"?"⚠︎ ":""}${esc(u?uName(u):"")}</span></div>
+    <div class="ih-title">${esc(tabTitle(t))}</div>${un&&t!=="altro"?`<div class="ih-sub">${esc(un)}</div>`:""}`;
+  $("#tools").innerHTML="";
+}
+function vAltro(){
+  const u=me(),adm=isAdmin(),e=S.meta&&S.meta.lexp&&S.meta.lexp.u,dd=e?Math.floor((Date.now()-e)/864e5):null;
+  const row=(attr,ic,bg,tx,sub,cls)=>`<button class="ir ${cls||""}" ${attr}><span class="ic" style="background:${bg}">${ic}</span><span class="tx">${tx}${sub?`<span class="sub">${sub}</span>`:""}</span>${cls==="red"?"":`<span class="chev"></span>`}</button>`;
+  const grp=(t,rows)=>rows.length?`${t?`<div class="igh">${t}</div>`:""}<div class="ig">${rows.join("")}</div>`:"";
+  return `<div class="ialtro">
+    <div class="ig iuser"><div class="iu-av">${esc(((u&&uName(u))||"?").replace(/^[^A-Za-zÀ-ú]*(?:\S+\.\s*)*/,"").slice(0,1).toUpperCase()||"👤")}</div><div><div class="iu-n">${esc(u?uName(u):"")}</div><div class="iu-r">${esc(u?roleTxt(u):"")}${adm&&u&&!/ammin/i.test(roleTxt(u))?" · amministratore":""}</div></div></div>
+    ${grp("Sezioni",[row('data-tab="scheda" data-from="altro"',"🪪","#5856D6","Scheda militare"),row('data-tab="org"',"🏛️","#34C759","Organico"),
+      adm?row('data-tab="imp"',"⚙️","#8E8E93","Impostazioni","Fogli, campi, unità, gradi"):"",canMgr()?row('data-tab="acc"',"🔐","#FF9500","Account"):""].filter(Boolean))}
+    ${grp("Fogli",VS().map(sh=>row(`data-tab="${sh.id}"`,esc(sh.icon||"📄"),"#E5E5EA",esc(sh.name||"(senza nome)"))))}
+    ${grp("Archivio",[FH&&FH.local?row('data-act="lexport"',"📤","#007AFF","Esporta una copia",dd==null?"Mai esportato":"Ultima: "+(dd===0?"oggi":dd===1?"ieri":dd+" giorni fa")):"",
+      row('data-act="csv"',"📊","#34C759","Esporta per Excel"),row('data-act="print"',"🖨️","#8E8E93","Stampa questa pagina"),
+      FH&&FH.local?row('data-act="gChange"',"📥","#5AC8FA","Importa un altro archivio","Sostituisce quello sul telefono"):""].filter(Boolean))}
+    ${grp("",[row('data-act="mypw"',"🔑","#FF9500","Cambia password"),row('data-act="logout"',"⎋","#FF3B30","Esci","","red")])}
+    <p class="ifoot">${APP} ${esc(APPL)}<br>${esc(CREDIT)}</p></div>`;
+}
 function renderNav(){
   const n=alertCount(),adm=isAdmin(),u=me();
   const main=[["quadro","📋","Quadro"],["tras","📍","Trasparenza","Presenze"],["scad","⏰","Scadenze"],["pers","👥","Personale"],["scheda","🪪","Scheda militare","Scheda"],["org","🏛️","Organico"]]
     .concat(adm?[["imp","⚙️","Impostazioni"]]:[]).concat(canMgr()?[["acc","🔐","Account"]]:[]);
+  if(IOS)return renderNavIOS(n);
   const fogli=VS().map(s=>[s.id,esc((s.icon?s.icon+" ":"")+(s.name||"(senza nome)"))]);
   $("#nav").innerHTML=(fogli.length?`<div class="nsub"><span class="nlab">Fogli</span>${fogli.map(([id,l])=>`<button data-tab="${id}" class="${S.ui.tab===id?"on":""}">${l}</button>`).join("")}</div>`:"")+
     `<div class="nmain">${main.map(([id,ic,l,sh])=>`<button data-tab="${id}" class="${S.ui.tab===id?"on":""}"><i class="ni">${ic}</i><span class="nl">${l}</span><span class="ns">${sh||l}</span>${id==="scad"&&n?`<span class="bub">${n}</span>`:""}</button>`).join("")}</div>`;
@@ -962,13 +1104,13 @@ function render(){
   const selS=!S.ui.focusK&&ae&&ae.selectionStart!=null?ae.selectionStart:null;
   S.ui.focusK=null;
   const t=S.ui.tab,sht=sheet(t);
-  if(!(["quadro","tras","org","pers","scheda","scad"].includes(t)||(t==="imp"&&isAdmin())||(t==="acc"&&canMgr())||(sht&&canR(sht.id))))S.ui.tab="quadro";
+  if(!(["quadro","tras","org","pers","scheda","scad"].includes(t)||(t==="altro"&&IOS)||(t==="imp"&&isAdmin())||(t==="acc"&&canMgr())||(sht&&canR(sht.id))))S.ui.tab="quadro";
   if(S.ui.fUnit&&(!unit(S.ui.fUnit)||!inView(S.ui.fUnit)))S.ui.fUnit="";
   renderNav();
   const sh=sheet(S.ui.tab);
   const titles={quadro:"Quadro generale",tras:"Trasparenza – situazione della forza",org:"Organico",pers:"Personale",scheda:"Scheda militare",scad:"Scadenze",imp:"Impostazioni",acc:"Account"};
   const body=(RO?`<div class="ronote noprint">${FH&&FH.ro?"👁 Stai consultando una copia dell'archivio in sola lettura: le modifiche non vengono salvate e non vedi gli aggiornamenti degli altri finché non la riapri.":`Stai lavorando in sola lettura: il programma non riesce a scrivere sul file archivio${LASTERR?" ("+esc(errIt(LASTERR))+")":""}. Serve il permesso di «Modifica» sulla cartella condivisa: il browser, quando salva, crea per un attimo un file temporaneo (.crswap) accanto all'archivio.`}</div>`:"")+
-    (sh?vSheet(sh):({quadro:vQuadro,tras:vTras,org:vOrg,pers:vPers,scheda:vScheda,scad:vScad,imp:vImp,acc:vAcc}[S.ui.tab])());
+    (sh?vSheet(sh):({quadro:vQuadro,tras:vTras,org:vOrg,pers:vPers,scheda:vScheda,scad:vScad,imp:vImp,acc:vAcc,altro:vAltro}[S.ui.tab])());
   $("#view").innerHTML=`<div class="printhead"><h1>${esc(S.madre)}</h1><div>${esc(sh?sh.name:titles[S.ui.tab])} – ${fmtD(todayISO())}</div><div class="small">${APP} ${esc(CREDIT)}</div></div>`+body+datalists();
   if(fk){const el=$("#view").querySelector(`[data-k="${CSS.escape(fk)}"]`);if(el){el.focus();try{if(selS!=null)el.setSelectionRange(selS,selS)}catch(e){}}}
   if(S.ui.tab==="org")orgFit();
@@ -1183,7 +1325,7 @@ function vTGrid(){
     d.forEach((x,i)=>{if(!x){pres[i]++;return}const k=tcatOf(x.sh,x.e);chain.forEach(y=>{y.a[i]++;y.c[i][k]=(y.c[i][k]||0)+1})})});
   const flat=!!norm(S.ui.q),rowsP=[];let body="";
   const pRow=(p,dep)=>{const r=rowsP.length;rowsP.push(p.id);const d=PD.get(p.id),ed=tgEditable(p);let ab=0;
-    let x=`<tr><td class="nm" style="padding-left:${8+dep*16}px"><a href="#" data-act="open" data-id="${p.id}" title="${esc(unitLong(p.unitId))}">${esc(pname(p))}</a></td>`;
+    let x=`<tr><td class="nm" style="padding-left:${8+dep*16}px"><a href="#" data-act="open" data-id="${p.id}" title="${esc(pname(p)+" – "+unitLong(p.unitId))}">${esc(IOS?String(p.v.cognome||"").toUpperCase()+(p.v.nome?" "+String(p.v.nome).trim()[0]+".":""):pname(p))}</a></td>`;
     d.forEach((e,c)=>{if(e){ab++;const a=attOf(e.sh,e.e),lf=locF(e.sh),lo=lf?norm(e.e.v[lf.id]):"";
         x+=`<td class="gc tc-${a.cat} ${dcls[c]}${ed?"":" ro"}" data-r="${r}" data-c="${c}" title="${esc(pname(p))} · ${fmtD(M.days[c])}\n${esc(a.name)}${lo?" – "+esc(lo):""}\ndal ${fmtD(e.a)} al ${fmtD(e.b)} (${esc(e.sh.name)})">${esc(a.sig)}</td>`}
       else x+=`<td class="gc ${dcls[c]}${ed?"":" ro"}" data-r="${r}" data-c="${c}"></td>`});
@@ -1230,7 +1372,7 @@ function paintSel(){
   const w=$("#tgwrap");if(!w)return;
   w.querySelectorAll("td.gc.gsel").forEach(td=>td.classList.remove("gsel","gsa"));
   const R=selRect(),info=$("#tgInfo");
-  if(!R){if(info)info.innerHTML="Seleziona una o più celle (clic e trascina, oppure Maiusc + clic), poi scegli l'attività.";return}
+  if(!R){if(info)info.innerHTML=IOS?"Tocca il primo giorno e poi l'ultimo, poi l'attività.":"Seleziona una o più celle (clic e trascina, oppure Maiusc + clic), poi scegli l'attività.";return}
   w.querySelectorAll("td.gc").forEach(td=>{const r=+td.dataset.r,c=+td.dataset.c;if(r>=R.r0&&r<=R.r1&&c>=R.c0&&c<=R.c1)td.classList.add("gsel")});
   const an=w.querySelector(`td.gc[data-r="${SEL.r1}"][data-c="${SEL.c1}"]`);if(an)an.classList.add("gsa");
   if(info){const nr=R.r1-R.r0+1,nd=R.c1-R.c0+1,ro=TGV.pids.slice(R.r0,R.r1+1).map(person).filter(p=>p&&!tgEditable(p)).length;
@@ -1442,7 +1584,24 @@ function vOrg(){
 }
 
 // PERSONALE
+// iPhone: elenco semplice (tocchi il nome → scheda), nuovo militare con un modulo
+function vPersIOS(){
+  const ps=filtered(S.ui.fUnit,S.ui.q),w=canW("anag");
+  let h=`<div class="card noprint">${unitFilter(`<input type="search" class="isearch" data-in="q" data-k="q" value="${esc(S.ui.q)}" placeholder="🔍 Cerca cognome, grado, matricola">`)}
+    ${w?`<button class="btn pri iwide" data-act="ipadd">＋ Nuovo militare</button>`:""}</div>`;
+  if(!ps.length)return h+`<div class="card"><p class="empty">${S.ui.q?"Nessun militare trovato.":"Ancora nessun militare. Tocca «Nuovo militare» per aggiungere il primo."}</p></div>`;
+  const by=new Map();ps.forEach(p=>{if(!by.has(p.unitId))by.set(p.unitId,[]);by.get(p.unitId).push(p)});
+  const order=unitTree().map(x=>x.u.id).filter(id=>by.has(id));[...by.keys()].forEach(k=>{if(!order.includes(k))order.push(k)});
+  const DOT={ko:"#FF3B30",warn:"#FF9500",ok:"#34C759",nd:"#C7C7CC"};
+  order.forEach(id=>{const l=sortPeople(by.get(id));
+    h+=`<div class="igh">${esc(unit(id)?unit(id).name:"Senza unità")} · ${l.length}</div><div class="ig">`+l.map(p=>{const ov=overall(p),ini=String(p.v.cognome||"?").trim().slice(0,1).toUpperCase();
+      return `<button class="ir" data-act="open" data-id="${p.id}"><span class="iav">${esc(ini)}</span><span class="tx">${esc(String(p.v.cognome||"").toUpperCase())} ${esc(p.v.nome||"")}<span class="sub">${esc(p.v.grado||"")}${ov!=="nd"?` · <i class="idot" style="background:${DOT[ov]}"></i>${esc(OVERALL[ov])}`:""}</span></span><span class="chev"></span></button>`}).join("")+`</div>`});
+  const wsh=S.sheets.filter(x=>canW(x.id));
+  if(wsh.length){const bs=wsh.find(x=>x.id===S.ui.bsh)||wsh[0];h+=vBulk(bs,filtered(S.ui.fUnit).filter(p=>canWP(p,bs.id)),wsh)}
+  return h;
+}
 function vPers(){
+  if(IOS)return vPersIOS();
   const ps=filtered(S.ui.fUnit,S.ui.q),pf=PF(),w=canW("anag");
   let h=`<div class="card noprint">${unitFilter(`<b>Cerca:</b><input type="text" data-in="q" data-k="q" value="${esc(S.ui.q)}" placeholder="cognome, grado, matricola…">`)}
     ${w?`<div class="row-actions"><button class="btn pri" data-act="padd">+ Aggiungi militare</button><button class="btn" data-act="ptoggle">📋 Importa da Excel</button></div>${S.ui.paste?vImport():""}`:""}</div>`;
@@ -1463,10 +1622,11 @@ function vScheda(){
   const ps=filtered(S.ui.fUnit,S.ui.q);
   let p=VP().find(x=>x.id===S.ui.sel)||ps[0];if(p)S.ui.sel=p.id;
   const opts=ps.slice(0,300);if(p&&!opts.includes(p))opts.unshift(p);
-  let h=`<div class="card noprint">${unitFilter(`<b>Cerca:</b><input type="text" data-in="q" data-k="q" value="${esc(S.ui.q)}" placeholder="cognome o matricola…">`)}
+  let h=IOS&&p?`<div class="isnav noprint"><button class="btn sm" data-act="pmv" data-dir="-1">‹ Precedente</button><span>${ps.indexOf(p)+1} di ${ps.length}</span><button class="btn sm" data-act="pmv" data-dir="1">Successivo ›</button></div>`:`<div class="card noprint">${unitFilter(`<b>Cerca:</b><input type="text" data-in="q" data-k="q" value="${esc(S.ui.q)}" placeholder="cognome o matricola…">`)}
     <div class="sel" style="margin:0"><b>Militare:</b><select class="big" data-ch="sel" data-k="sel">${opts.map(x=>`<option value="${x.id}" ${p&&x.id===p.id?"selected":""}>${esc(pname(x))} — ${esc(unitName(x.unitId))}</option>`).join("")}</select>
     <button class="btn" data-act="pmv" data-dir="-1" title="Precedente">◀</button><button class="btn" data-act="pmv" data-dir="1" title="Successivo">▶</button>${canW("anag")?`<button class="btn pri" data-act="padd">+ Nuovo militare</button>`:""}
     <span class="small">${ps.length>300?`${ps.length} militari: usa la ricerca o il filtro unità per restringere l'elenco`:`${ps.length} militari nell'elenco`}</span></div></div>`;
+  if(IOS&&!p)h=`<div class="card noprint"><button class="btn pri iwide" data-act="ipadd">＋ Nuovo militare</button></div>`;
   if(!p)return h+`<div class="card"><p class="empty">Nessun militare inserito.</p></div>`;
   const ov=overall(p);
   h+=`<div class="card"><div class="phead"><div><div class="pn" id="pn-title">${esc(pname(p))}</div><div class="pu">${esc(unitLong(p.unitId))}</div>${canMgr()&&accOf(p.id)?`<div class="small">👤 Account: <b>${esc(accOf(p.id).username)}</b> (${esc(roleTxt(accOf(p.id)))})</div>`:""}${lastMod(p)}</div>${badge(ov,OVERALL[ov])}</div>
@@ -1830,8 +1990,10 @@ function gate(mode,msg){
   else if(mode==="start")h+=`<h2>Collega l'archivio</h2><p class="hint">Tutti i dati stanno in un unico file archivio (.json) nella cartella condivisa. La prima volta indica dove si trova: il programma lo ricorderà su questo PC.</p>
     <div class="gbtns"><button class="btn pri" data-act="gOpen">📂 Apri l'archivio esistente</button><button class="btn" data-act="gNew">🆕 Crea un nuovo archivio</button></div>
     <p class="hint">«Crea un nuovo archivio» serve una sola volta, all'amministratore.</p>`;
-  else if(mode==="new"){const ld=localData();h+=`<h2>Nuovo archivio</h2><p class="hint">Crei l'archivio e il primo account, che sarà <b>amministratore</b>. Poi sceglierai dove salvarlo: mettilo nella cartella condivisa, per esempio in <i>PERSONALE\\archivio</i>. Nell'archivio verranno copiati unità, fogli (${esc(ld.sheets.map(s=>s.name).join(", "))}) e ${ld.people.length} militari presenti su questo PC.</p>`;h+=`
-    ${fldH("gName","Grado e nome","text","","es. Cap. Rossi Mario")}${fldH("gU","Nome utente","text","","es. admin")}${fldH("gP","Password (almeno 8 caratteri)","password")}${fldH("gP2","Ripeti la password","password")}
+  else if(mode==="new"){const old=JSON.parse(LOCAL0),np=(old.people||[]).length;h+=`<h2>Nuovo archivio</h2><p class="hint">Parte <b>vuoto</b>: solo la tua unità, senza militari. Tu sarai l'<b>amministratore</b>.${LOCALMODE()?"":" Poi sceglierai dove salvarlo (es. nella cartella condivisa)."}</p>
+    ${fldH("gUnit","La tua unità","text","","es. Compagnia Trasporti")}${fldH("gUp","Unità superiore (facoltativa)","text","","es. CSSBN")}${fldH("gNum","Militari previsti (facoltativo)","number","","es. 50")}
+    ${!LOCALMODE()&&np?`<label class="chk"><input type="checkbox" id="gCopy"> Copia invece i dati già presenti su questo PC (${np} militari)</label>`:""}
+    ${fldH("gName","Il tuo grado e nome","text","","es. Cap. Rossi Mario")}${fldH("gU","Nome utente","text","","es. admin")}${fldH("gP","Password (almeno 8 caratteri)","password")}${fldH("gP2","Ripeti la password","password")}
     <div class="gbtns"><button class="btn pri" data-act="gCreate">Crea l'archivio</button><button class="btn" data-act="gBack">Indietro</button></div>`;}
   else if(mode==="login")h+=`<h2>Accesso</h2><p class="hint">Archivio: <b>${esc(FH?FH.name:"")}</b>${FH&&FH.ro?" · <b>sola consultazione</b>":""}</p>${fldH("gU","Nome utente","text")}${fldH("gP","Password","password")}
     <div class="gbtns"><button class="btn pri" data-act="gLogin">Accedi</button></div><p class="hint"><a href="#" data-act="gChange">${FH&&FH.local?"Importa un altro archivio":"Collega un altro archivio"}</a></p>`;
@@ -1908,16 +2070,17 @@ const GACT={
     if(old&&!confirm("Sul dispositivo c'è già un archivio: lo sostituisco con «"+f.name+"»? Se contiene modifiche, esportalo prima."))return;
     try{await lset("arch",{text:t,lm:Date.now(),name:f.name});FH=localHandle({name:f.name});keepStorage();LASTERR=null;gate("login","Archivio importato: "+o.people.length+" militari. Accedi con il tuo account.")}catch(e){LASTERR=e;gmsg("Non riesco a salvare sul dispositivo: "+errIt(e))}}),
   gCreate:async()=>{
-    const name=norm($("#gName").value),u=norm($("#gU").value),p=$("#gP").value;
+    const name=norm($("#gName").value),u=norm($("#gU").value),p=$("#gP").value,un=norm(($("#gUnit")||{}).value),up=norm(($("#gUp")||{}).value),cp=$("#gCopy")&&$("#gCopy").checked;
+    if(!un&&!cp)return gmsg("Scrivi il nome della tua unità");
     if(!name||!u)return gmsg("Compila grado e nome e il nome utente");
     if(pwOk(p,$("#gP2").value,gmsg)!==true)return;
     let h;if(LOCALMODE()){let old=null;try{old=await lget("arch")}catch(e){}if(old&&!confirm("Sul dispositivo c'è già un archivio: crearne uno nuovo lo sostituisce. Continuo?"))return;h=localHandle({name:"Archivio su questo dispositivo"});keepStorage()}
     else try{h=await window.showSaveFilePicker({suggestedName:"GESPER_archivio.json",types:JTYPES})}catch(e){if(e.name!=="AbortError"){showHelp(e.name,e);gmsg("Impossibile creare il file: "+errIt(e))}return}
     const adm={id:uid(),username:u,name,admin:true,active:true,scope:{all:true,units:[]},sec:{},ext:{all:true,units:[]},xsec:{},created:new Date().toISOString()};await setPw(adm,p);
-    const D=dataOf(fix(localData()));D.users=[adm];D.meta={licAdded:{u:Date.now()},srvAdded:{u:Date.now()}};D.del={};D.rev=1;D.savedAt=new Date().toISOString();D.savedBy=u;
+    const D=dataOf(fix(cp?localData():cleanData(un,up,norm(($("#gNum")||{}).value))));D.users=[adm];D.meta={licAdded:{u:Date.now()},srvAdded:{u:Date.now()}};D.del={};D.rev=1;D.savedAt=new Date().toISOString();D.savedBy=u;
     FH=h;try{await writeArchive(D)}catch(e){LASTERR=e;showHelp(e.name,e);return gmsg("Impossibile salvare l'archivio: "+errIt(e)+". Nella cartella serve il permesso di «Modifica»: il browser vi crea anche un file temporaneo (.crswap).")}
     if(!h.local)await idbSet(h);RO=false;applyData(fix(D));BASE=sigMap(S);ME_ID=adm.id;try{sessionStorage.setItem(SKEY,adm.id)}catch(e){}
-    enterApp();toast("Archivio creato. Ora crea gli account nella scheda «Account».");
+    S.ui.fUnit=cp?"":((S.units.find(x=>x.name===un)||{}).id||"");S.ui.tab="pers";S.ui.lastUser=u;saveUI();enterApp();toast(cp?"Archivio creato con i dati di questo PC":`Archivio creato: ${un}. Ora aggiungi i tuoi militari.`);
   },
   gLogin:async()=>{
     const u=norm($("#gU").value),p=$("#gP").value;
@@ -2170,8 +2333,18 @@ function mv(arr,i,d){const j=i+d;if(i<0||j<0||j>=arr.length)return;[arr[i],arr[j
 function autoScad(sh,v){const df=fType(sh,"data"),sf=fType(sh,"scadenza");if(df&&sf&&sh.months>0&&v[df.id]&&!v[sf.id])v[sf.id]=addMonths(v[df.id],sh.months)}
 let pickT=null;
 const ACT={
-  open:d=>{S.ui.sel=d.id;S.ui.tab="scheda";save();render();window.scrollTo(0,0)},
-  padd:()=>{
+  open:d=>{S.ui.from=["quadro","tras","scad","pers"].includes(S.ui.tab)?S.ui.tab:(S.ui.tab==="scheda"?S.ui.from:"altro");S.ui.sel=d.id;S.ui.tab="scheda";save();render();window.scrollTo(0,0)},
+  ipadd:()=>{
+    if(!canW("anag"))return denied();
+    const leaves=S.units.filter(u=>!S.units.some(k=>k.parentId===u.id)&&canWP({unitId:u.id},"anag")),du=(S.ui.fUnit&&unit(S.ui.fUnit)?S.ui.fUnit:"")||(leaves.length===1?leaves[0].id:defUnit());
+    if(!du)return toast("Prima crea un'unità (Altro → Organico)");
+    const us=unitTree().filter(({u})=>canWP({unitId:u.id},"anag"));
+    modal("Nuovo militare",`<label class="fld"><span>Grado</span><input type="text" id="nGr" list="dl-gradi" autocomplete="off" placeholder="es. Graduato scelto"></label>${fldH("nCo","Cognome","text","","es. ROSSI")}${fldH("nNo","Nome","text","","es. Mario")}
+      <label class="fld"><span>Unità</span><select id="nUn">${us.map(({u,d})=>`<option value="${u.id}" ${u.id===du?"selected":""}>${NB.repeat(d)}${esc(u.name||"(senza nome)")}</option>`).join("")}</select></label>`,"Aggiungi",()=>{
+      const c=norm($("#nCo").value);if(!c)return mmsg("Scrivi almeno il cognome");
+      const p={id:uid(),unitId:$("#nUn").value,v:{grado:norm($("#nGr").value),cognome:c.toUpperCase(),nome:norm($("#nNo").value)}};
+      S.people.push(p);S.ui.from=["quadro","tras","scad","pers"].includes(S.ui.tab)?S.ui.tab:"pers";S.ui.sel=p.id;S.ui.tab="scheda";save();closeModal();render();window.scrollTo(0,0);toast(pname(p)+" aggiunto")})},
+  padd:()=>{if(IOS)return ACT.ipadd();
     if(!canW("anag"))return denied();
     const u=defUnit();if(!u)return toast(isAdmin()?"Prima crea almeno un'unità in Impostazioni → Unità e organico":"Non hai unità assegnate: rivolgiti all'amministratore");
     const p={id:uid(),unitId:u,v:{}};S.people.push(p);S.ui.q="";
@@ -2282,7 +2455,7 @@ const ACT={
     sh.subs=sh.subs.filter(x=>x.id!==s.id);sh.fields.forEach(f=>{if(f.per===s.id)delete f.per});save();render()},
   sfmv:d=>{const sh=sheet(d.sh);mv(sh.fields,sh.fields.findIndex(x=>x.id===d.f),+d.dir);save();render()},
   lexport:async()=>{if(dirty)await sync(false);const name=`GESPER_archivio_${todayISO()}.json`,r=await shareOrDownload(name,JSON.stringify(dataOf(S)));
-    if(r==="abort")return;S.meta.lexp={u:Date.now()};save();renderNav();toast(r==="share"?"Scegli «Salva su File» (o iCloud) per conservare la copia":"Archivio esportato nei Download")},
+    if(r==="abort")return;S.meta.lexp={u:Date.now()};save();render();toast(r==="share"?"Scegli «Salva su File» (o iCloud) per conservare la copia":"Archivio esportato nei Download")},
   mergein:()=>{if(!admOK())return denied();pickJSON((t,f)=>{let o;try{o=fix(JSON.parse(t))}catch(e){return toast("File non valido")}
     if(!o||!Array.isArray(o.people)||!Array.isArray(o.sheets))return toast("Il file non è un archivio di questo programma");
     if(!confirm(`Unire «${f.name}» all'archivio condiviso? Per ogni militare e voce vale la versione modificata più di recente; le cancellazioni fatte sul telefono vengono applicate.`))return;
@@ -2387,7 +2560,7 @@ function callIN(k,t){if(!IN[k])return;if(!me())return;if(ADM_IN.has(k)&&!admOK()
 function callCH(k,t){if(!CH[k])return;if(!me())return;if((ADM_CH.has(k)&&!admOK())||(ACC_CH[k]&&!canMgr())){denied();return render()}CH[k](t)}
 document.addEventListener("click",ev=>{
   const t=ev.target.closest("[data-tab],[data-act]");if(!t||t.disabled)return;
-  if(t.dataset.tab){ev.preventDefault();if(!me())return;S.ui.tab=t.dataset.tab;S.ui.q="";S.ui.pg={};saveUI();render();window.scrollTo(0,0);return}
+  if(t.dataset.tab){ev.preventDefault();if(!me())return;if(t.dataset.tab==="scheda")S.ui.from=t.dataset.from||S.ui.from;else if(["quadro","tras","scad","pers","altro"].includes(t.dataset.tab))S.ui.from="";S.ui.tab=t.dataset.tab;S.ui.q="";S.ui.pg={};saveUI();render();window.scrollTo(0,0);return}
   const a=t.dataset.act,f=ACT[a];if(!f)return;
   if(t.tagName==="A")ev.preventDefault();
   if(!GACT[a]&&!me())return;
