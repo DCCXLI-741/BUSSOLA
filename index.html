@@ -98,7 +98,7 @@ function norm(X){const d=DEF();X=Object.assign(d,X||{});X.set=Object.assign(DEF(
 function guessFolder(n,F){const s=String(n||'').toLowerCase(),has=id=>F.some(f=>f.id===id)?id:null;
  return(/affitt|condomin|luce|gas|bollett|internet|casa|acqua|tari/.test(s)&&has('casa'))||(/auto|assicuraz|bollo|benzin|carbur|tagliand|gomm|rca/.test(s)&&has('auto'))||(/netflix|spotify|abbonam|disney|prime|icloud|telefon|palestra/.test(s)&&has('abb'))||has('altro')||F[F.length-1].id}
 S=norm(S);
-let ref=null,cloud='local',wq=null,writing=false,sheetFn=null,SIM=null;const open={};
+let ref=null,cloud='local',wq=null,writing=false,sheetFn=null;const open={};
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function save(){S.ts=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(ref){clearTimeout(wq);wq=setTimeout(push,700)}}
 async function push(){if(!ref)return;if(writing){clearTimeout(wq);wq=setTimeout(push,500);return}writing=true;try{await ref.set(JSON.parse(JSON.stringify(S)));cloud='ok'}catch(e){cloud='err'}writing=false}
@@ -129,7 +129,7 @@ function project(H,P){P=P||params();const r=(+P.resa||0)/1200,cur=nowYM();let L=
  for(const p of S.plan)if(p.mese<=cur)L-=+p.imp;
  if(P.invNow){const x=Math.max(0,L-P.cus-upcoming(cur,6));L-=x;I+=x;V+=x}
  for(let i=1;i<=H;i++){const ym=addYM(cur,i),m=month(ym,P);for(const p of S.plan)if(p.mese===ym)L-=+p.imp;
-  I=I*(1+r)+m.inv;V+=m.inv;L+=m.cont;if(P.sweep){const keep=P.cus+upcoming(addYM(ym,1),6);if(L>keep&&m.cont>0){const sw=Math.min(m.cont,L-keep);L-=sw;I+=sw;V+=sw}}
+  I=I*(1+r)+m.inv;V+=m.inv;L+=m.cont;if(P.sweep){const keep=P.cus+upcoming(addYM(ym,1),6);if(L>keep){const sw=L-keep;L-=sw;I+=sw;V+=sw}}
   out.push({ym,L,I,V})}return out}
 function eta(t,P){if(!t)return null;if(invTot()>=t)return 0;const pr=project(600,P),i=pr.findIndex(p=>p.I>=t);return i<0?null:i+1}
 function snap(){if(S.liq.val==null&&!S.inv.length)return;const d=iso(today());S.hist=S.hist.filter(h=>h.d!==d);S.hist.push({d,L:liq(),I:Math.round(invTot()*100)/100});S.hist.sort((a,b)=>a.d.localeCompare(b.d))}
@@ -141,7 +141,7 @@ function status(){const m=month(addYM(nowYM(),1)),P=project(+S.set.oriz||36);let
  if(m.rest<0)return['var(--red)','Le spese superano le entrate',`Ogni mese mancano ${eu(-m.rest)}.`];
  if(mn&&mn.L<0)return['var(--red)','Il conto va in negativo',`A ${mName(mn.ym,1)} arriveresti a ${eu(mn.L)}.`];
  if(m.pac>m.invB)return['var(--orange)','I PAC superano la quota investimento',`Investi ${eu(m.pac)} ma la strategia ne prevede ${eu(m.invB)}.`];
- const c=+S.set.cus;if(liq()>=c)return['var(--green)','Piano sostenibile','Il cuscinetto è pieno.'];const i=P.findIndex(p=>p.L>=c);
+ const c=+S.set.cus;if(liq()>=c)return['var(--green)','Piano sostenibile',c?'Il cuscinetto è pieno.':'Nessun cuscinetto: quello che avanza va tutto investito.'];const i=P.findIndex(p=>p.L>=c);
  return['var(--green)','Piano sostenibile',i<0?`Il cuscinetto di ${eu(c)} non si riempie entro ${P.length} mesi.`:`Il cuscinetto di ${eu(c)} sarà pieno a ${mName(P[i].ym,1)}.`]}
 /* ---------- grafico interattivo ---------- */
 const CH={};
@@ -187,7 +187,7 @@ function flowCard(m){const fx=fixM(),al=+S.altre||0,L=liq(),c=+S.set.cus,sw=S.se
  <div style="display:flex;flex-wrap:wrap;gap:4px 14px">${segs.map(s=>`<span style="font-size:13px;color:var(--mut);display:flex;align-items:center;gap:6px"><i class="dot" style="background:${s[2]}"></i>${s[0]} ${eu(s[1])}</span>`).join('')}</div></div>
  <div class="list" style="margin-top:10px">${rows.map(r=>`<div class="row" style="min-height:44px;padding:10px 16px"><span class="t">${r[0]}</span><span class="v"><b class="${r[2]||''}">${r[1]>0?'+':''}${eu(r[1])}</b></span></div>`).join('')}
  <div class="row" style="min-height:52px"><span class="t"><b style="font-weight:700">Resta sul conto ogni mese</b></span><span class="v"><b style="font-weight:700;font-size:20px" class="${m.cont<0?'neg':'pos'}">${m.cont>0?'+':''}${eu(m.cont)}</b></span></div></div>
- <p class="hint">${m.cont<0?`Il conto scende di ${eu(-m.cont)} al mese.`:sw?`Il cuscinetto è già pieno e lo spostamento automatico è attivo: anche questi ${eu(m.cont)} andrebbero investiti, quindi il conto resta intorno a ${eu(L)}.`:`Il conto cresce: tra 6 mesi avrai circa ${eu(c6)}${c>0&&L<c?`, verso il cuscinetto di ${eu(c)}`:''}.`}</p>`}
+ <p class="hint">${m.cont<0?`Il conto scende di ${eu(-m.cont)} al mese.`:S.set.sweep&&L>=c?`Sul conto resta ${c?'il cuscinetto di '+eu(c):'solo il necessario'}${upcoming(nowYM(),6)?' più le spese previste':''}: tutto il resto va investito.${L-c-upcoming(nowYM(),6)>100?` Oggi hai ${eu(L-c-upcoming(nowYM(),6))} in più da investire.`:''}`:m.cont<1?'Tutto quello che avanza va investito: il saldo del conto resta com’è.':`Il conto cresce: tra 6 mesi avrai circa ${eu(c6)}${c>0&&L<c?`, verso il cuscinetto di ${eu(c)}`:''}.`}</p>`}
 function mainChart(){const D=mainData(),T=D.L.map((l,i)=>l+D.I[i]),g=S.set.g1,se=S.set.serie||'t',SV=se==='c'?D.L:se==='i'?D.I:T;
  const tip=i=>`<span class="mut">${mName(D.labels[i],1)}${i>D.split?' · stima':''}</span><br><b>${eu(T[i])}</b><br><span style="color:var(--blue)">●</span> ${eu(D.I[i])} <span style="color:var(--green)">●</span> ${eu(D.L[i])}`;
  const cur0=se==='c'?liq():se==='i'?invTot():liq()+invTot();const scrub=i=>{const b=$('#bigv'),s=$('#bigs');if(!b)return;if(i==null){b.textContent=eu(cur0);s.innerHTML=subTxt();return}b.textContent=eu(SV[i]);s.textContent=(i>D.split?'Stima a ':i===D.split?'Oggi · ':'')+mName(D.labels[i],1)};
@@ -212,35 +212,39 @@ function vRie(){const st=status(),m=month(addYM(nowYM(),1)),T=todo(),I=invTot(),
  ${T.length?`<h2>Cosa fare questo mese</h2><div class="list">${T.map(t=>`<div class="row"><i class="dot" style="background:${t[3]}"></i><span class="t">${t[0]}<small>${t[1]}</small></span><span class="v"><b>${t[2]}</b></span></div>`).join('')}</div>`:''}
  <p class="foot">Stime con rendimento ipotetico del ${String(S.set.resa).replace('.',',')}% annuo: i mercati non vanno in linea retta.</p>`}
 /* ---------- simulatore ---------- */
-function simInit(){if(!SIM)SIM={pct:+S.set.pct,cus:+S.set.cus,resa:+S.set.resa,spese:Math.round(speseM()),invNow:false,sweep:!!S.set.sweep}}
-function vStrat(){simInit();const sp0=Math.round(speseM()),cmax=Math.max(20000,Math.ceil(+S.set.cus*2/1000)*1000),smax=Math.max(1000,Math.ceil(sp0*2/100)*100);
- return`<h1>Strategia</h1><div class="list hero"><small class="mut" id="sLbl">Raggiungi ${esc(S.set.g1n.toLowerCase())} di ${eu(S.set.g1)}</small><p class="big" id="sEta">—</p><p class="sub" id="sDelta"></p>
- <div class="fig" id="chS"></div><p style="font-size:13px;color:var(--mut);margin-top:8px;display:flex;gap:14px"><span><i class="dot" style="background:var(--blue)"></i> Simulazione</span><span><i class="dot" style="background:var(--gray)"></i> Piano attuale</span></p></div>
+let BASE=null;const snapBase=()=>({pct:+S.set.pct,cus:+S.set.cus,resa:+S.set.resa,altre:+S.altre||0,sweep:!!S.set.sweep});
+const baseP=()=>({pct:BASE.pct,cus:BASE.cus,resa:BASE.resa,spese:fixM()+BASE.altre,sweep:BASE.sweep});
+const changed=()=>BASE&&JSON.stringify(BASE)!==JSON.stringify(snapBase());
+function vStrat(){if(!BASE)BASE=snapBase();const al=+S.altre||0,cmax=Math.max(20000,Math.ceil(+S.set.cus*2/1000)*1000),amax=Math.max(1500,Math.ceil(al*2/100)*100);
+ return`<h1>Strategia</h1><p class="hint" style="margin:-6px 4px 12px">Ogni modifica vale subito per tutta l’app.</p><div class="list hero"><small class="mut">Raggiungi ${esc(S.set.g1n.toLowerCase())} di ${eu(S.set.g1)}</small><p class="big" id="sEta">—</p><p class="sub" id="sDelta"></p>
+ <div class="fig" id="chS"></div><p id="sLeg" style="font-size:13px;color:var(--mut);margin-top:8px;display:flex;gap:14px"></p></div>
  <div class="chips" role="group" aria-label="Strategie pronte">${PRESETS.map(([n],i)=>`<button data-act="preset" data-i="${i}" aria-pressed="false">${n}</button>`).join('')}</div>
  <div class="list" style="margin-top:12px">
- <div class="sl"><div class="ctl"><span>Investi di ciò che avanza</span><b id="vPct"></b></div><input type="range" id="rPct" min="0" max="100" step="5" value="${SIM.pct}" aria-label="Percentuale investita"><small id="hPct"></small></div>
- <div class="sl"><div class="ctl"><span>Cuscinetto sul conto</span><b id="vCus"></b></div><input type="range" id="rCus" min="0" max="${cmax}" step="500" value="${SIM.cus}" aria-label="Cuscinetto"><small id="hCus"></small></div>
- <div class="sl"><div class="ctl"><span>Spese al mese</span><b id="vSp"></b></div><input type="range" id="rSp" min="0" max="${smax}" step="50" value="${SIM.spese}" aria-label="Spese mensili"><small id="hSp"></small></div>
- <div class="sl"><div class="ctl"><span>Rendimento annuo stimato</span><b id="vRe"></b></div><input type="range" id="rRe" min="0" max="10" step="0.5" value="${SIM.resa}" aria-label="Rendimento annuo"><small>Ipotesi: nessuno conosce il rendimento futuro.</small></div>
- <label class="row" style="cursor:pointer"><span class="t">Investi subito la liquidità in eccesso<small id="hNow"></small></span><input type="checkbox" id="rNow" ${SIM.invNow?'checked':''} style="width:22px;height:22px;accent-color:var(--blue)"></label></div>
+ <div class="sl"><div class="ctl"><span>Investi di ciò che avanza</span><b id="vPct"></b></div><input type="range" id="rPct" min="0" max="100" step="5" value="${S.set.pct}" aria-label="Percentuale investita"><small id="hPct"></small></div>
+ <div class="sl"><div class="ctl"><span>Cuscinetto sul conto</span><b id="vCus"></b></div><input type="range" id="rCus" min="0" max="${cmax}" step="500" value="${S.set.cus}" aria-label="Cuscinetto"><small id="hCus"></small></div>
+ <label class="row" style="cursor:pointer"><span class="t">Investi tutto ciò che supera il cuscinetto<small id="hSw"></small></span><input type="checkbox" id="rSw" ${S.set.sweep?'checked':''} style="width:22px;height:22px;accent-color:var(--blue)"></label>
+ <div class="sl"><div class="ctl"><span>Altre spese al mese</span><b id="vSp"></b></div><input type="range" id="rSp" min="0" max="${amax}" step="50" value="${al}" aria-label="Altre spese mensili"><small id="hSp"></small></div>
+ <div class="sl"><div class="ctl"><span>Rendimento annuo stimato</span><b id="vRe"></b></div><input type="range" id="rRe" min="0" max="10" step="0.5" value="${S.set.resa}" aria-label="Rendimento annuo"><small>Ipotesi: nessuno conosce il rendimento futuro.</small></div></div>
  <div class="stats" id="sStats"></div><p class="hint" id="sRisk" style="margin-top:12px"></p>
- <button class="btn" data-act="apply">Applica al mio piano</button><button class="btn sec" data-act="simreset">Ripristina il piano attuale</button>`}
-function updSim(){if(!$('#chS'))return;const P0=params(),P1={...SIM},g=S.set.g1||100000,cur=nowYM(),e0=eta(g,P0),e1=eta(g,P1),m=month(addYM(cur,1),P1);
- const H=Math.min(480,Math.max(36,Math.max(e0||0,e1||0)+12)),A=project(H,P0),B=project(H,P1),labels=[cur,...A.map(p=>p.ym)],a=[liq()+invTot(),...A.map(p=>p.L+p.I)];
- const I0=invTot(),L0=liq(),x0=P1.invNow?Math.max(0,L0-P1.cus-upcoming(cur,6)):0,b=[L0+I0,...B.map(p=>p.L+p.I)];
+ <button class="btn sec" data-act="undo" id="sUndo" hidden>Annulla le modifiche</button>`}
+function updSim(){if(!$('#chS'))return;const ch=changed(),P0=baseP(),P1=params(),g=S.set.g1||100000,cur=nowYM(),e0=eta(g,P0),e1=eta(g,P1),m=month(addYM(cur,1),P1),L0=liq();
+ const H=Math.min(480,Math.max(36,Math.max(e0||0,e1||0)+12)),A=project(H,P0),B=project(H,P1),labels=[cur,...B.map(p=>p.ym)],tot=L0+invTot(),a=[tot,...A.map(p=>p.L+p.I)],b=[tot,...B.map(p=>p.L+p.I)];
  $('#sEta').textContent=e1==null?'Non ci arrivi':e1===0?'Già raggiunto':mName(addYM(cur,e1),1);
- const d=e0!=null&&e1!=null?e0-e1:null;$('#sDelta').innerHTML=e1==null?'Aumenta la quota investita o riduci le spese.':d==null?'Con il piano attuale non ci arriveresti: questa strategia sì.':d>0?`<span class="pos">${dur(d)} prima</span> del piano attuale · tra ${dur(e1)}`:d<0?`<span class="neg">${dur(-d)} dopo</span> il piano attuale · tra ${dur(e1)}`:`Come il piano attuale · tra ${dur(e1)}`;
- $('#vPct').textContent=SIM.pct+'%';$('#hPct').textContent=m.rest>0?`${eu(m.inv)} investiti e ${eu(Math.max(0,m.cont))} sul conto ogni mese, su ${eu(m.rest)} che avanzano`:'Le spese assorbono tutte le entrate';
- $('#vCus').textContent=eu(SIM.cus);const sp=speseM()||1;$('#hCus').textContent=SIM.cus?`circa ${(SIM.cus/sp).toFixed(1).replace('.',',')} mesi di spese`:'nessun fondo per gli imprevisti';
- $('#vSp').textContent=eu(SIM.spese);const ds=SIM.spese-Math.round(speseM());$('#hSp').textContent=ds?(ds<0?`${eu(-ds)} in meno di oggi`:`${eu(ds)} in più di oggi`):'come oggi';
- $('#vRe').textContent=String(SIM.resa).replace('.',',')+'%';$('#hNow').textContent=x0>0?`sposteresti subito ${eu(x0)} dal conto`:'oggi non c’è liquidità oltre il cuscinetto';
+ const d=e0!=null&&e1!=null?e0-e1:null;$('#sDelta').innerHTML=e1==null?'Aumenta la quota investita o riduci le spese.':!ch||d===0?`Tra ${dur(e1)}`:d==null?'Prima non ci arrivavi: così sì.':d>0?`<span class="pos">${dur(d)} prima</span> di prima delle modifiche · tra ${dur(e1)}`:`<span class="neg">${dur(-d)} dopo</span> di prima delle modifiche · tra ${dur(e1)}`;
+ $('#sLeg').innerHTML=`<span><i class="dot" style="background:var(--blue)"></i> Il tuo piano</span>${ch?'<span><i class="dot" style="background:var(--gray)"></i> Prima delle modifiche</span>':''}`;
+ $('#vPct').textContent=S.set.pct+'%';$('#hPct').textContent=m.rest>0?`${eu(m.inv)} investiti al mese (PAC compresi), ${eu(Math.max(0,m.cont))} restano sul conto`:'Le spese assorbono tutte le entrate';
+ const ex=Math.max(0,L0-S.set.cus-upcoming(cur,6));$('#vCus').textContent=eu(S.set.cus);const sp=speseM()||1;$('#hCus').textContent=S.set.cus?`circa ${(S.set.cus/sp).toFixed(1).replace('.',',')} mesi di spese`:'nessun fondo per gli imprevisti';
+ $('#hSw').textContent=S.set.sweep?(ex>0?`oggi hai ${eu(ex)} in più sul conto: nella stima li investi subito`:'il conto resta al livello del cuscinetto'):'la liquidità in più resta ferma sul conto';
+ $('#vSp').textContent=eu(+S.altre||0);const ds=(+S.altre||0)-BASE.altre;$('#hSp').textContent=`spese fisse ${eu(fixM())} · totale ${eu(speseM())} al mese${ds?' · '+(ds<0?eu(-ds)+' in meno':eu(ds)+' in più')+' di prima':''}`;
+ $('#vRe').textContent=String(S.set.resa).replace('.',',')+'%';
  const at=e1?B[Math.min(e1,B.length)-1]:B[B.length-1],y10=project(120,P1).pop(),y10b=project(120,P0).pop(),lo=eta(g,{...P1,resa:Math.max(0,P1.resa-2)}),hi=eta(g,{...P1,resa:P1.resa+2});
- $('#sStats').innerHTML=`<div><small>Investi ogni mese</small><b>${eu(m.inv)}</b></div><div><small>Patrimonio tra 10 anni</small><b>${eu(y10.L+y10.I)}</b><small class="${y10.L+y10.I>=y10b.L+y10b.I?'pos':'neg'}">${sg(y10.L+y10.I-y10b.L-y10b.I)} vs piano</small></div>
+ $('#sStats').innerHTML=`<div><small>Investi ogni mese</small><b>${eu(m.inv)}</b></div><div><small>Patrimonio tra 10 anni</small><b>${eu(y10.L+y10.I)}</b>${ch?`<small class="${y10.L+y10.I>=y10b.L+y10b.I?'pos':'neg'}">${sg(y10.L+y10.I-y10b.L-y10b.I)} rispetto a prima</small>`:''}</div>
  <div><small>Di cui versati da te</small><b>${eu(at.V)}</b></div><div><small>Di cui rendimento</small><b class="pos">${eu(Math.max(0,at.I-at.V))}</b><small>${e1?'al traguardo':'a fine periodo'}</small></div>`;
- $('#sRisk').innerHTML=(SIM.cus<speseM()*3?'<b style="color:var(--orange)">Cuscinetto sotto 3 mesi di spese.</b> Un imprevisto potrebbe costringerti a vendere investimenti in un momento sfavorevole. ':'')+(lo!==hi&&e1?`Con rendimenti tra ${String(Math.max(0,P1.resa-2)).replace('.',',')}% e ${String(P1.resa+2).replace('.',',')}% l’obiettivo arriverebbe ${hi?'tra '+mName(addYM(cur,hi)):'—'} e ${lo?mName(addYM(cur,lo)):'mai'}.`:'');
- document.querySelectorAll('[data-act=preset]').forEach(x=>{const p=PRESETS[+x.dataset.i][1];x.setAttribute('aria-pressed',p.pct===SIM.pct&&cusVal(p.cus)===SIM.cus&&!!p.invNow===SIM.invNow)});
- chart('chS',{labels,split:-1,goal:g,label:'Simulazione e piano attuale a confronto',series:[{vals:a,color:'var(--gray)',w:2,dash:1},{vals:b,color:'var(--blue)',fill:1}],
-  tip:i=>`<span class="mut">${mName(labels[i],1)}</span><br><span style="color:var(--blue)">●</span> <b>${eu(b[i])}</b><br><span style="color:var(--gray)">●</span> ${eu(a[i])} <span class="${b[i]-a[i]>=0?'pos':'neg'}">${sg(b[i]-a[i])}</span>`})}
+ $('#sRisk').innerHTML=(S.set.cus<speseM()*3?'<b style="color:var(--orange)">Cuscinetto sotto 3 mesi di spese.</b> Un imprevisto potrebbe costringerti a vendere investimenti in un momento sfavorevole. ':'')+(lo!==hi&&e1?`Con rendimenti tra ${String(Math.max(0,P1.resa-2)).replace('.',',')}% e ${String(P1.resa+2).replace('.',',')}% l’obiettivo arriverebbe tra ${hi?mName(addYM(cur,hi)):'—'} e ${lo?mName(addYM(cur,lo)):'mai'}.`:'');
+ $('#sUndo').hidden=!ch;
+ document.querySelectorAll('[data-act=preset]').forEach(x=>{const p=PRESETS[+x.dataset.i][1];x.setAttribute('aria-pressed',p.pct===+S.set.pct&&cusVal(p.cus)===+S.set.cus&&(!p.invNow||S.set.sweep))});
+ chart('chS',{labels,split:-1,goal:g,label:'Il tuo piano a confronto con prima delle modifiche',series:ch?[{vals:a,color:'var(--gray)',w:2,dash:1},{vals:b,color:'var(--blue)',fill:1}]:[{vals:b,color:'var(--blue)',fill:1}],
+  tip:i=>`<span class="mut">${mName(labels[i],1)}</span><br><span style="color:var(--blue)">●</span> <b>${eu(b[i])}</b>${ch?`<br><span style="color:var(--gray)">●</span> ${eu(a[i])} <span class="${b[i]-a[i]>=0?'pos':'neg'}">${sg(b[i]-a[i])}</span>`:''}`})}
 const sg=n=>(n>=0?'+':'−')+eu(Math.abs(n));
 /* ---------- spese ---------- */
 function vSpese(){const m=month(addYM(nowYM(),1)),F=S.folders,tot=speseM()||1,ft=f=>S.fix.filter(x=>x.f===f.id).reduce((s,x)=>s+(+x.imp||0)/(+x.freq||1),0);
@@ -259,7 +263,7 @@ function vSpese(){const m=month(addYM(nowYM(),1)),F=S.folders,tot=speseM()||1,ft
  <h2>PAC<small>${eu(pacM())}/mese</small></h2><div class="list">${S.pac.map(p=>row('pac',p.id,esc(p.n),p.g?'il giorno '+p.g:'',eu(p.imp)+'/mese')).join('')}<button class="row add" data-act="pac">Aggiungi PAC</button></div>
  <h2>Spese previste</h2><div class="list">${[...S.plan].sort((a,b)=>a.mese.localeCompare(b.mese)).map(p=>row('plan',p.id,esc(p.n),mName(p.mese,1),eu(p.imp))).join('')}<button class="row add" data-act="plan">Aggiungi spesa prevista</button></div>
  <h2>Conto</h2><div class="list">${row('liq','','Liquidità',S.liq.data?'aggiornata al '+new Date(S.liq.data+'T00:00:00').toLocaleDateString('it-IT',{day:'numeric',month:'short'}):'da inserire',S.liq.val==null?'—':eu(S.liq.val))}${row('cus','','Cuscinetto','quanto tieni fermo',eu(S.set.cus))}
- <label class="row" style="cursor:pointer"><span class="t">Spostamento automatico<small>a cuscinetto pieno, la contingenza va investita</small></span><input type="checkbox" id="sweep" ${S.set.sweep?'checked':''} style="width:22px;height:22px;accent-color:var(--green)"></label></div>
+ <label class="row" style="cursor:pointer"><span class="t">Investi tutto ciò che supera il cuscinetto<small>nella stima la liquidità in più va investita</small></span><input type="checkbox" id="sweep" ${S.set.sweep?'checked':''} style="width:22px;height:22px;accent-color:var(--green)"></label></div>
  <h2>Obiettivi</h2><div class="list">${row('goal','1',esc(S.set.g1n),'investiti',S.set.g1?eu(S.set.g1):'—')}${row('goal','2',esc(S.set.g2n),'investiti',S.set.g2?eu(S.set.g2):'—')}</div>`}
 /* ---------- investimenti ---------- */
 function vInv(){const T=invTot(),C=costTot(),G=T-C,by={};S.inv.forEach(x=>by[x.tipo]=(by[x.tipo]||0)+val(x));const last=S.inv.reduce((m,x)=>x.agg&&x.agg>m?x.agg:m,''),age=last?Math.round((today()-new Date(last+'T00:00:00'))/864e5):null;
@@ -276,7 +280,7 @@ function invChart(){const hp=S.hist.filter(h=>h.I>0);if(hp.length<2||!$('#chI'))
   onScrub:i=>{const b=$('#ibig');if(b)b.textContent=eu(i==null?invTot():v[i])}})}
 const V={riepilogo:vRie,strategia:vStrat,spese:vSpese,investimenti:vInv};
 function render(){const h=location.hash.slice(1),k=V[h]?h:'riepilogo';document.querySelectorAll('#tabs a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+k));
- Object.keys(CH).forEach(x=>delete CH[x]);$('#view').innerHTML=V[k]();if(k==='riepilogo')mainChart();if(k==='strategia')updSim();if(k==='investimenti')invChart()}
+ if(k!=='strategia')BASE=null;Object.keys(CH).forEach(x=>delete CH[x]);$('#view').innerHTML=V[k]();if(k==='riepilogo')mainChart();if(k==='strategia')updSim();if(k==='investimenti')invChart()}
 /* ---------- fogli ---------- */
 function openSh(fn){sheetFn=fn;$('#sc').innerHTML=fn();$('#sheet').hidden=false;$('#sc').scrollTop=0;const f=$('#sc input');if(f&&matchMedia('(hover:hover)').matches)f.focus()}
 function closeSh(){sheetFn=null;$('#sheet').hidden=true}
@@ -303,15 +307,14 @@ const shCheck=()=>{const m=month(addYM(nowYM(),1));return nb('Chiudi il mese','s
 function shSet(){const st=window.claude?(cloud==='ok'?'Dati salvati nel tuo account.':'Dati salvati su questo dispositivo.'):'I dati restano solo su questo iPhone. Fai un backup ogni tanto.';
  return`<div class="nb"><span></span><b>Impostazioni</b><button data-act="sset">Fine</button></div><div class="list">${fld('x-r','Rendimento stimato %',n2(S.set.resa),'4')}</div>
  <p class="hint">${st}</p><div class="list" style="margin-top:20px"><button class="row add" data-act="export">Scarica backup</button><label class="row add" for="bk" style="cursor:pointer">Carica backup</label></div><input id="bk" type="file" accept=".json" hidden>
- <p class="hint">Bussola v2.1 · Strumento di calcolo personale, non consulenza finanziaria.</p>`}
+ <p class="hint">Bussola v2.2 · Strumento di calcolo personale, non consulenza finanziaria.</p>`}
 /* ---------- azioni ---------- */
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,id=b.dataset.id,g=s=>(($(s)||{}).value??'').trim(),n=s=>num(g(s));if(b.tagName==='A'&&b.getAttribute('href')==='#')e.preventDefault();
  const O={close:closeSh,settings:()=>openSh(shSet),inc:()=>openSh(shInc(id)),fix:()=>openSh(shFix(id,b.dataset.f)),altre:()=>openSh(shAltre),pac:()=>openSh(shPac(id)),plan:()=>openSh(shPlan(id)),liq:()=>openSh(shLiq),cus:()=>openSh(shCus),goal:()=>openSh(shGoal(id)),pos:()=>openSh(shPos(id)),
   prices:()=>openSh(shPrices),check:()=>openSh(shCheck),folder:()=>openSh(shFolder(id)),go:()=>{location.hash='#'+b.dataset.h},
   tfold:()=>{open[id]=!open[id];render()},vista:()=>{S.set.vista=b.dataset.v;save();render()},serie:()=>{S.set.serie=b.dataset.v;save();render()},rng:()=>{S.set.rng=+b.dataset.v;save();render()},
-  preset:()=>{const p=PRESETS[+b.dataset.i][1];SIM.pct=p.pct;SIM.cus=cusVal(p.cus);SIM.invNow=!!p.invNow;$('#rPct').value=SIM.pct;$('#rCus').value=SIM.cus;$('#rNow').checked=SIM.invNow;updSim()},
-  simreset:()=>{SIM=null;render()},
-  apply:()=>{S.set.pct=SIM.pct;S.set.cus=SIM.cus;S.set.resa=SIM.resa;const ds=SIM.spese-speseM(),now=SIM.invNow?Math.max(0,liq()-SIM.cus-upcoming(nowYM(),6)):0;if(Math.abs(ds)>=1)S.altre=Math.max(0,Math.round((+S.altre||0)+ds));save();SIM=null;render();toast(now>0?`Piano aggiornato. Ricordati di investire ${eu(now)} dal conto`:Math.abs(ds)>=1?'Piano aggiornato: ho corretto le altre spese':'Piano aggiornato')}};
+  preset:()=>{const p=PRESETS[+b.dataset.i][1];S.set.pct=p.pct;S.set.cus=cusVal(p.cus);if(p.invNow)S.set.sweep=true;save();$('#rPct').value=S.set.pct;$('#rCus').value=S.set.cus;$('#rSw').checked=S.set.sweep;updSim()},
+  undo:()=>{S.set.pct=BASE.pct;S.set.cus=BASE.cus;S.set.resa=BASE.resa;S.altre=BASE.altre;S.set.sweep=BASE.sweep;save();render();toast('Modifiche annullate')}};
  if(O[a]){O[a]();return}
  const up=(arr,o)=>{if(id)Object.assign(arr.find(x=>x.id===id),o);else arr.push({id:uid(),...o})},rm=k=>{S[k]=S[k].filter(x=>x.id!==id)};
  if(a==='sinc'){if(!(n('#e-i')>0)){toast('Scrivi l’importo');return}up(S.inc,{n:g('#e-n')||'Entrata',imp:n('#e-i'),al:g('#e-al')})}
@@ -322,21 +325,21 @@ document.addEventListener('click',async e=>{const b=e.target.closest('[data-act]
  else if(a==='spac'){if(!(n('#p-i')>0)){toast('Scrivi l’importo');return}up(S.pac,{n:g('#p-n')||'PAC',imp:n('#p-i'),g:g('#p-g'),pos:g('#p-pos')})}
  else if(a==='splan'){if(!(n('#s-i')>0)){toast('Scrivi l’importo');return}up(S.plan,{n:g('#s-n')||'Spesa prevista',imp:n('#s-i'),mese:g('#s-m')||addYM(nowYM(),1)})}
  else if(a==='sliq'){const v=n('#l-v');S.liq={val:isNaN(v)?null:v,data:iso(today())};snap()}
- else if(a==='scus'){S.set.cus=n('#c-v')||0;SIM=null}
+ else if(a==='scus'){S.set.cus=n('#c-v')||0}
  else if(a==='sgoal'){S.set['g'+id+'n']=g('#g-n')||(id==='1'?'Prossimo traguardo':'Obiettivo finale');S.set['g'+id]=n('#g-t')||null}
  else if(a==='spos'){if(!g('#i-n')){toast('Scrivi il nome');return}const q=n('#i-q'),px=n('#i-px');up(S.inv,{n:g('#i-n'),tipo:g('#i-t'),val:isNaN(n('#i-v'))?(q&&px?q*px:0):n('#i-v'),cost:n('#i-c')||'',qty:q||'',pmc:n('#i-pm')||'',px:px||'',isin:g('#i-isin').toUpperCase(),agg:iso(today())});snap()}
  else if(a==='sprices'||a==='prices2'){if(a==='sprices'){const before=invTot();S.inv.forEach(x=>{const v=n('#pr-'+x.id);if(!isNaN(v)&&v>0){if(x.qty&&x.px)x.px=v;else x.val=v;x.agg=iso(today())}});snap();const d=invTot()-before;closeSh();save();render();toast(Math.abs(d)<1?'Prezzi aggiornati':`Prezzi aggiornati: ${sg(d)}`);return}
   const v=n('#k-l');if(!isNaN(v))S.liq={val:v,data:iso(today())};snap();save();openSh(shPrices);return}
  else if(a==='scheck'){const v=n('#k-l'),before=S.hist.length?S.hist[S.hist.length-1]:null;if(!isNaN(v))S.liq={val:v,data:iso(today())};const cur=nowYM();S.checks=S.checks.filter(c=>c.ym!==cur);S.checks.push({ym:cur,inv:n('#k-i')||0});snap();
   const now=liq()+invTot(),prev=before?before.L+before.I:null;closeSh();save();render();toast(prev!=null&&before.d<iso(today())?`Mese chiuso: patrimonio ${sg(now-prev)}`:`Mese chiuso · ${streak()} di fila`);return}
- else if(a==='sset'){S.set.resa=isNaN(n('#x-r'))?0:n('#x-r');SIM=null}
+ else if(a==='sset'){S.set.resa=isNaN(n('#x-r'))?0:n('#x-r')}
  else if(a==='dinc')rm('inc');else if(a==='dfix')rm('fix');else if(a==='dpac')rm('pac');else if(a==='dplan')rm('plan');else if(a==='dpos'){rm('inv');S.pac.forEach(p=>{if(p.pos===id)p.pos=''});snap()}
  else if(a==='export'){const name='bussola-backup-'+iso(today())+'.json',data=JSON.stringify(S,null,1);try{const dl=window.claude&&await claude.use('downloads');if(dl){await dl.save({filename:name,data});toast('Backup scaricato');return}
   const f=new File([data],name,{type:'application/json'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Backup Bussola'});return}const u=URL.createObjectURL(f),l=document.createElement('a');l.href=u;l.download=name;document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000)}catch(err){if(err&&err.name!=='AbortError'&&err.code!=='declined')toast('Backup non riuscito')}return}
  else return;closeSh();save();render()});
-document.addEventListener('input',e=>{const t=e.target;if(!SIM||!t.id||!/^r(Pct|Cus|Sp|Re)$/.test(t.id))return;const k={rPct:'pct',rCus:'cus',rSp:'spese',rRe:'resa'}[t.id];SIM[k]=+t.value;updSim()});
-document.addEventListener('change',async e=>{const t=e.target;if(t.id==='rNow'){SIM.invNow=t.checked;updSim()}
- else if(t.id==='sweep'){S.set.sweep=t.checked;SIM=null;save();render()}
+let sTimer=0;document.addEventListener('input',e=>{const t=e.target;if(!t.id||!/^r(Pct|Cus|Sp|Re)$/.test(t.id))return;const v=+t.value;if(t.id==='rSp')S.altre=v;else S.set[{rPct:'pct',rCus:'cus',rRe:'resa'}[t.id]]=v;updSim();clearTimeout(sTimer);sTimer=setTimeout(save,400)});
+document.addEventListener('change',async e=>{const t=e.target;if(t.id==='rSw'){S.set.sweep=t.checked;save();updSim()}
+ else if(t.id==='sweep'){S.set.sweep=t.checked;save();render()}
  else if(t.id==='bk'&&t.files[0]){try{const X=JSON.parse(await t.files[0].text());if(!X||!Array.isArray(X.inv))throw 0;S=norm(X);snap();save();closeSh();render();toast('Backup caricato')}catch(err){toast('File non valido')}}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#sheet').hidden)closeSh()});
 addEventListener('hashchange',()=>{scrollTo(0,0);render()});
