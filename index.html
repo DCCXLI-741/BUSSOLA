@@ -87,11 +87,11 @@ details summary{list-style:none;cursor:pointer;color:var(--blue);padding:14px 16
 {
 /* ---------- dati ---------- */
 const TIPI={etf:'ETF',fondo:'Fondo',azione:'Azione',obbl:'Obbligazione',altro:'Altro'};
-const FCOL=['#ff9500','#007aff','#af52de','#ff2d55','#30b0c7','#5856d6','#34c759','#a2845e'];
+const IC=['var(--blue)','#5ac8fa','#5856d6','#30b0c7','#af52de'];const FCOL=['#ff9500','#ffcc00','#af52de','#ff2d55','#30b0c7','#5856d6','#34c759','#a2845e'];
 const DEFF=()=>[{id:'casa',n:'Casa'},{id:'auto',n:'Auto'},{id:'abb',n:'Abbonamenti'},{id:'pers',n:'Persona e salute'},{id:'altro',n:'Altro'}];
 const PRESETS=[['Tutto investito',{pct:100,cus:0,invNow:true}],['Aggressiva',{pct:70,cus:'3m'}],['Bilanciata',{pct:50,cus:'4m'}],['Prudente',{pct:30,cus:'6m'}]];
 const KEY='bussola2';let S=null;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
-const DEF=()=>({v:3,ts:0,liq:{val:null,data:''},inv:[],inc:[],fix:[],altre:0,pac:[],plan:[],hist:[],checks:[],folders:DEFF(),set:{pct:70,cus:5000,sweep:true,resa:4,oriz:36,g1:100000,g1n:'Prossimo traguardo',g2:null,g2n:'Obiettivo finale',rng:60,vista:'m'}});
+const DEF=()=>({v:3,ts:0,liq:{val:null,data:''},inv:[],inc:[],fix:[],altre:0,pac:[],plan:[],hist:[],checks:[],folders:DEFF(),set:{pct:70,cus:5000,sweep:true,resa:4,oriz:36,g1:100000,g1n:'Prossimo traguardo',g2:null,g2n:'Obiettivo finale',rng:60,vista:'m',serie:'t'}});
 function norm(X){const d=DEF();X=Object.assign(d,X||{});X.set=Object.assign(DEF().set,X.set||{});X.liq=X.liq||{val:null,data:''};
  ['inv','inc','fix','pac','plan','hist','checks'].forEach(k=>{if(!Array.isArray(X[k]))X[k]=[]});if(!Array.isArray(X.folders)||!X.folders.length)X.folders=DEFF();
  X.fix.forEach(f=>{if(!X.folders.some(o=>o.id===f.f))f.f=guessFolder(f.n,X.folders)});return X}
@@ -179,17 +179,26 @@ function todo(){const m=month(addYM(nowYM(),1)),L=liq(),c=+S.set.cus,extra=L-c-u
  if(S.set.sweep&&extra>100&&S.liq.val!=null)out.push(['Liquidità in più sul conto','oltre cuscinetto e spese previste',eu(extra),'var(--blue)']);return out}
 function mainData(){const hm=histM(),cur=nowYM(),past=Object.keys(hm).filter(k=>k<cur).sort(),P=project(+S.set.rng||60);
  const labels=[...past,cur,...P.map(p=>p.ym)],L=[...past.map(k=>hm[k].L),liq(),...P.map(p=>p.L)],I=[...past.map(k=>hm[k].I),invTot(),...P.map(p=>p.I)];return{labels,L,I,split:past.length}}
-function mainChart(){const D=mainData(),T=D.L.map((l,i)=>l+D.I[i]),g=S.set.g1;
+const SER={t:['Patrimonio','var(--blue)'],c:['Conto','var(--green)'],i:['Investito','var(--blue)']};
+function flowCard(m){const fx=fixM(),al=+S.altre||0,L=liq(),c=+S.set.cus,sw=S.set.sweep&&L>=c&&m.cont>0,p6=project(6),c6=p6.length?p6[p6.length-1].L:L;
+ const segs=[['Spese',fx+al,'var(--orange)'],['PAC',m.pac,'var(--blue)'],['A tua scelta',m.free,'#5ac8fa'],['Resta',Math.max(0,m.cont),'var(--green)']].filter(s=>s[1]>0);
+ const rows=[['Entrate',m.inc,'pos'],['Spese fisse',-fx],['Altre spese',-al],['PAC',-m.pac],m.free>0?['Da investire a tua scelta',-m.free]:null].filter(r=>r&&r[1]);
+ return`<h2>Il mese sul conto</h2><div class="list hero"><small class="mut">Su ${eu(m.inc)} di entrate</small><div class="split" aria-hidden="true">${segs.map(s=>`<i style="flex:${s[1]};background:${s[2]}"></i>`).join('')}</div>
+ <div style="display:flex;flex-wrap:wrap;gap:4px 14px">${segs.map(s=>`<span style="font-size:13px;color:var(--mut);display:flex;align-items:center;gap:6px"><i class="dot" style="background:${s[2]}"></i>${s[0]} ${eu(s[1])}</span>`).join('')}</div></div>
+ <div class="list" style="margin-top:10px">${rows.map(r=>`<div class="row" style="min-height:44px;padding:10px 16px"><span class="t">${r[0]}</span><span class="v"><b class="${r[2]||''}">${r[1]>0?'+':''}${eu(r[1])}</b></span></div>`).join('')}
+ <div class="row" style="min-height:52px"><span class="t"><b style="font-weight:700">Resta sul conto ogni mese</b></span><span class="v"><b style="font-weight:700;font-size:20px" class="${m.cont<0?'neg':'pos'}">${m.cont>0?'+':''}${eu(m.cont)}</b></span></div></div>
+ <p class="hint">${m.cont<0?`Il conto scende di ${eu(-m.cont)} al mese.`:sw?`Il cuscinetto è già pieno e lo spostamento automatico è attivo: anche questi ${eu(m.cont)} andrebbero investiti, quindi il conto resta intorno a ${eu(L)}.`:`Il conto cresce: tra 6 mesi avrai circa ${eu(c6)}${c>0&&L<c?`, verso il cuscinetto di ${eu(c)}`:''}.`}</p>`}
+function mainChart(){const D=mainData(),T=D.L.map((l,i)=>l+D.I[i]),g=S.set.g1,se=S.set.serie||'t',SV=se==='c'?D.L:se==='i'?D.I:T;
  const tip=i=>`<span class="mut">${mName(D.labels[i],1)}${i>D.split?' · stima':''}</span><br><b>${eu(T[i])}</b><br><span style="color:var(--blue)">●</span> ${eu(D.I[i])} <span style="color:var(--green)">●</span> ${eu(D.L[i])}`;
- const scrub=i=>{const b=$('#bigv'),s=$('#bigs');if(!b)return;if(i==null){b.textContent=eu(liq()+invTot());s.innerHTML=subTxt();return}b.textContent=eu(T[i]);s.textContent=(i>D.split?'Stima a ':i===D.split?'Oggi · ':'')+mName(D.labels[i],1)};
+ const cur0=se==='c'?liq():se==='i'?invTot():liq()+invTot();const scrub=i=>{const b=$('#bigv'),s=$('#bigs');if(!b)return;if(i==null){b.textContent=eu(cur0);s.innerHTML=subTxt();return}b.textContent=eu(SV[i]);s.textContent=(i>D.split?'Stima a ':i===D.split?'Oggi · ':'')+mName(D.labels[i],1)};
  if(S.set.vista==='a'){const yrs={};D.labels.forEach((l,i)=>{yrs[l.slice(0,4)]=i});const bars=Object.entries(yrs).map(([y,i])=>({lab:"'"+y.slice(2),i,est:i>D.split,parts:[{v:Math.max(0,D.I[i]),color:'var(--blue)'},{v:Math.max(0,D.L[i]),color:'var(--green)'}]}));
-  chart('chM',{mode:'bars',bars,goal:g,label:'Patrimonio anno per anno',tip:k=>tip(bars[k].i),onScrub:k=>scrub(k==null?null:bars[k].i)})}
- else chart('chM',{labels:D.labels,split:D.split,goal:g,label:'Andamento del patrimonio',series:[{vals:T,color:'var(--blue)',fill:1,splitDash:1},{vals:D.I,color:'var(--blue)',w:1.2,dash:1}],tip,onScrub:scrub})}
+  chart('chM',{mode:'bars',bars,goal:se==='c'?null:g,label:'Patrimonio anno per anno',tip:k=>tip(bars[k].i),onScrub:k=>scrub(k==null?null:bars[k].i)})}
+ else chart('chM',{labels:D.labels,split:D.split,goal:se==='c'?null:g,label:'Andamento: '+SER[se][0],series:se==='t'?[{vals:T,color:'var(--blue)',fill:1,splitDash:1},{vals:D.I,color:'var(--blue)',w:1.2,dash:1}]:[{vals:SV,color:SER[se][1],fill:1,splitDash:1}],tip,onScrub:scrub})}
 const subTxt=()=>{const I=invTot(),C=costTot();return`<span>Conto ${S.liq.val==null?'<a href="#" data-act="liq" style="color:var(--blue);text-decoration:none">da inserire</a>':eu(liq())}</span> · <span>Investito ${eu(I)} ${C?`<span class="${I-C>=0?'pos':'neg'}">${pct((I-C)/C*100)}</span>`:''}</span>`};
 const RNG=[[12,'1A'],[36,'3A'],[60,'5A'],[120,'10A'],[240,'20A']];
 function vRie(){const st=status(),m=month(addYM(nowYM(),1)),T=todo(),I=invTot(),g1=S.set.g1,e1=eta(g1),cur=nowYM(),checked=S.checks.some(c=>c.ym===cur),sk=streak();
  const ms=Math.ceil((I+1)/10000)*10000,em=g1&&ms<g1?eta(ms):null;
- return`<h1>Riepilogo</h1><div class="list hero"><small class="mut">Patrimonio</small><p class="big" id="bigv">${eu(liq()+I)}</p><p class="sub" id="bigs">${subTxt()}</p>
+ const se=S.set.serie||'t';return`<h1>Riepilogo</h1><div class="list hero"><div class="seg" style="margin-bottom:12px">${Object.entries(SER).map(([k,[n]])=>`<button data-act="serie" data-v="${k}" aria-pressed="${se===k}">${n}</button>`).join('')}</div><small class="mut">${SER[se][0]}${se==='c'?' · liquidità':''}</small><p class="big" id="bigv">${eu(se==='c'?liq():se==='i'?I:liq()+I)}</p><p class="sub" id="bigs">${subTxt()}</p>
  <div class="fig" id="chM"></div>
  <div class="ctl" style="margin-top:10px"><div class="seg" style="width:150px">${[['m','Mensile'],['a','Annuale']].map(([k,n])=>`<button data-act="vista" data-v="${k}" aria-pressed="${S.set.vista===k}">${n}</button>`).join('')}</div>
  <div class="seg">${RNG.map(([n,l])=>`<button data-act="rng" data-v="${n}" aria-pressed="${+S.set.rng===n}">${l}</button>`).join('')}</div></div>
@@ -199,7 +208,7 @@ function vRie(){const st=status(),m=month(addYM(nowYM(),1)),T=todo(),I=invTot(),
  ${g1?`<h2>${esc(S.set.g1n)}<small>${Math.floor(Math.min(100,I/g1*100))}%</small></h2><div class="list hero"><div style="display:flex;justify-content:space-between"><b style="font-weight:600">${eu(I)}</b><span class="mut">${eu(g1)}</span></div><div class="prog"><i style="width:${Math.min(100,I/g1*100).toFixed(1)}%"></i></div>
  <p class="mut" style="font-size:15px">${I>=g1?'Raggiunto. Imposta il prossimo traguardo.':e1==null?'Con il piano attuale non ci arrivi.':`Ci arrivi a <b style="color:var(--ink);font-weight:600">${mName(addYM(cur,e1),1)}</b>, tra ${dur(e1)}.`}${em?` Tappa intermedia: <b style="color:var(--ink);font-weight:600">${kk(ms)} €</b> a ${mName(addYM(cur,em),1)}.`:''}</p>
  <button class="btn sec" data-act="go" data-h="strategia">Arrivarci prima? Prova il simulatore</button></div>`:''}
- <h2>Il piano del mese</h2><div class="list hero">${S.inc.length?`<small class="mut">Entrate ${eu(m.inc)}</small>${legend(m)}`:'<p class="mut">Aggiungi le entrate nella scheda Spese.</p>'}</div>
+ ${S.inc.length?flowCard(m):'<h2>Il mese sul conto</h2><div class="list hero"><p class="mut">Aggiungi le entrate nella scheda Spese.</p></div>'}
  ${T.length?`<h2>Cosa fare questo mese</h2><div class="list">${T.map(t=>`<div class="row"><i class="dot" style="background:${t[3]}"></i><span class="t">${t[0]}<small>${t[1]}</small></span><span class="v"><b>${t[2]}</b></span></div>`).join('')}</div>`:''}
  <p class="foot">Stime con rendimento ipotetico del ${String(S.set.resa).replace('.',',')}% annuo: i mercati non vanno in linea retta.</p>`}
 /* ---------- simulatore ---------- */
@@ -237,9 +246,10 @@ const sg=n=>(n>=0?'+':'−')+eu(Math.abs(n));
 function vSpese(){const m=month(addYM(nowYM(),1)),F=S.folders,tot=speseM()||1,ft=f=>S.fix.filter(x=>x.f===f.id).reduce((s,x)=>s+(+x.imp||0)/(+x.freq||1),0);
  const row=(act,id,t,sub,v)=>`<button class="row chev" data-act="${act}" data-id="${id}"><span class="t">${t}${sub?`<small>${sub}</small>`:''}</span><span class="v">${v}</span></button>`;
  const parts=F.map((f,i)=>[f,ft(f),FCOL[i%FCOL.length]]).filter(p=>p[1]>0).concat(+S.altre?[[{n:'Altre spese'},+S.altre,'var(--gray)']]:[]);
- return`<h1>Spese</h1><div class="list hero"><small class="mut">Spese al mese</small><p class="big">${eu(speseM())}</p><p class="sub">${m.inc?Math.round(speseM()/m.inc*100)+'% delle entrate':''}</p>
+ const out=speseM()+m.pac+m.free;parts.push(...[[{n:'PAC'},m.pac,'var(--blue)'],[{n:'A tua scelta'},m.free,'#5ac8fa']].filter(p=>p[1]>0));
+ return`<h1>Spese</h1><div class="list hero"><small class="mut">Escono dal conto ogni mese</small><p class="big">${eu(out)}</p><p class="sub">${eu(speseM())} di spese + ${eu(m.pac+m.free)} investiti${m.inc?` · resta <b style="white-space:nowrap" class="${m.cont<0?'neg':'pos'}">${eu(m.cont)}</b>`:''}</p>
  <div class="split" aria-hidden="true">${parts.map(p=>`<i style="flex:${p[1]};background:${p[2]}"></i>`).join('')}</div>
- <div style="display:flex;flex-wrap:wrap;gap:4px 14px">${parts.map(p=>`<span style="font-size:13px;color:var(--mut);display:flex;align-items:center;gap:6px"><i class="dot" style="background:${p[2]}"></i>${esc(p[0].n)} ${Math.round(p[1]/tot*100)}%</span>`).join('')}</div></div>
+ <div style="display:flex;flex-wrap:wrap;gap:4px 14px">${parts.map(p=>`<span style="font-size:13px;color:var(--mut);display:flex;align-items:center;gap:6px"><i class="dot" style="background:${p[2]}"></i>${esc(p[0].n)} ${eu(p[1])}</span>`).join('')}</div></div>
  <h2>Cartelle<small><button data-act="folder" style="background:none;border:0;color:var(--blue);font:inherit;cursor:pointer;padding:0;min-height:32px">Nuova</button></small></h2>
  ${F.map((f,i)=>{const it=S.fix.filter(x=>x.f===f.id),o=open[f.id];return`<div class="list" style="margin-bottom:10px"><button class="row chev ${o?'open':''}" data-act="tfold" data-id="${f.id}" aria-expanded="${!!o}"><span class="dot" style="background:${FCOL[i%FCOL.length]}"></span><span class="t"><b style="font-weight:600">${esc(f.n)}</b><small>${it.length} ${it.length===1?'voce':'voci'}</small></span><span class="v"><b>${eu(ft(f))}</b>/mese</span></button>
  ${o?it.map(x=>row('fix',x.id,esc(x.n),+x.freq===12?eu(x.imp)+' all’anno':'ogni mese',eu(x.imp/(+x.freq||1)))).join('')+`<button class="row add" data-act="fix" data-f="${f.id}">Aggiungi in ${esc(f.n)}</button><button class="row" data-act="folder" data-id="${f.id}" style="color:var(--mut);font-size:15px">Rinomina o elimina cartella</button>`:''}</div>`}).join('')}
@@ -256,8 +266,8 @@ function vInv(){const T=invTot(),C=costTot(),G=T-C,by={};S.inv.forEach(x=>by[x.t
  const hp=S.hist.filter(h=>h.I>0);
  return`<h1>Investimenti</h1><div class="list hero"><small class="mut">Valore</small><p class="big" id="ibig">${eu(T)}</p><p class="sub" id="isub"><span class="${G>=0?'pos':'neg'}">${G>=0?'+':''}${eu(G,1)}${C?' ('+pct(G/C*100)+')':''}</span> rispetto a quanto hai versato</p>
  ${hp.length>1?'<div class="fig" id="chI" style="height:150px"></div>':''}
- <div class="split" aria-hidden="true">${Object.entries(by).map(([k,v],i)=>`<i style="flex:${v};background:${FCOL[(i+1)%FCOL.length]}"></i>`).join('')}</div>
- <div style="display:flex;flex-wrap:wrap;gap:4px 14px">${Object.entries(by).map(([k,v],i)=>`<span style="font-size:13px;color:var(--mut);display:flex;align-items:center;gap:6px"><i class="dot" style="background:${FCOL[(i+1)%FCOL.length]}"></i>${TIPI[k]} ${T?Math.round(v/T*100):0}%</span>`).join('')}</div>
+ <div class="split" aria-hidden="true">${Object.entries(by).map(([k,v],i)=>`<i style="flex:${v};background:${IC[i%IC.length]}"></i>`).join('')}</div>
+ <div style="display:flex;flex-wrap:wrap;gap:4px 14px">${Object.entries(by).map(([k,v],i)=>`<span style="font-size:13px;color:var(--mut);display:flex;align-items:center;gap:6px"><i class="dot" style="background:${IC[i%IC.length]}"></i>${TIPI[k]} ${T?Math.round(v/T*100):0}%</span>`).join('')}</div>
  <button class="btn" data-act="prices">Aggiorna i prezzi</button>${age!=null?`<p class="hint" style="margin:8px 0 0;text-align:center">${age===0?'Aggiornati oggi':age===1?'Aggiornati ieri':`Ultimo aggiornamento ${age} giorni fa`}</p>`:''}</div>
  <h2>Posizioni</h2><div class="list">${S.inv.map(x=>{const g=val(x)-cost(x),c=cost(x);return`<button class="row chev" data-act="pos" data-id="${x.id}"><span class="t">${esc(x.n)}<span class="tag">${TIPI[x.tipo]}</span><small>${S.pac.some(p=>p.pos===x.id)?'PAC · ':''}${c?'versati '+eu(c):''}</small></span><span class="v"><b>${eu(val(x))}</b><br><small class="${g>=0?'pos':'neg'}">${c?pct(g/c*100):''}</small></span></button>`}).join('')}<button class="row add" data-act="pos">Aggiungi investimento</button></div>
  <p class="foot">Bussola tiene il conto e fa stime: non dà consigli d’investimento.</p>`}
@@ -293,12 +303,12 @@ const shCheck=()=>{const m=month(addYM(nowYM(),1));return nb('Chiudi il mese','s
 function shSet(){const st=window.claude?(cloud==='ok'?'Dati salvati nel tuo account.':'Dati salvati su questo dispositivo.'):'I dati restano solo su questo iPhone. Fai un backup ogni tanto.';
  return`<div class="nb"><span></span><b>Impostazioni</b><button data-act="sset">Fine</button></div><div class="list">${fld('x-r','Rendimento stimato %',n2(S.set.resa),'4')}</div>
  <p class="hint">${st}</p><div class="list" style="margin-top:20px"><button class="row add" data-act="export">Scarica backup</button><label class="row add" for="bk" style="cursor:pointer">Carica backup</label></div><input id="bk" type="file" accept=".json" hidden>
- <p class="hint">Bussola v2.0 · Strumento di calcolo personale, non consulenza finanziaria.</p>`}
+ <p class="hint">Bussola v2.1 · Strumento di calcolo personale, non consulenza finanziaria.</p>`}
 /* ---------- azioni ---------- */
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,id=b.dataset.id,g=s=>(($(s)||{}).value??'').trim(),n=s=>num(g(s));if(b.tagName==='A'&&b.getAttribute('href')==='#')e.preventDefault();
  const O={close:closeSh,settings:()=>openSh(shSet),inc:()=>openSh(shInc(id)),fix:()=>openSh(shFix(id,b.dataset.f)),altre:()=>openSh(shAltre),pac:()=>openSh(shPac(id)),plan:()=>openSh(shPlan(id)),liq:()=>openSh(shLiq),cus:()=>openSh(shCus),goal:()=>openSh(shGoal(id)),pos:()=>openSh(shPos(id)),
   prices:()=>openSh(shPrices),check:()=>openSh(shCheck),folder:()=>openSh(shFolder(id)),go:()=>{location.hash='#'+b.dataset.h},
-  tfold:()=>{open[id]=!open[id];render()},vista:()=>{S.set.vista=b.dataset.v;save();render()},rng:()=>{S.set.rng=+b.dataset.v;save();render()},
+  tfold:()=>{open[id]=!open[id];render()},vista:()=>{S.set.vista=b.dataset.v;save();render()},serie:()=>{S.set.serie=b.dataset.v;save();render()},rng:()=>{S.set.rng=+b.dataset.v;save();render()},
   preset:()=>{const p=PRESETS[+b.dataset.i][1];SIM.pct=p.pct;SIM.cus=cusVal(p.cus);SIM.invNow=!!p.invNow;$('#rPct').value=SIM.pct;$('#rCus').value=SIM.cus;$('#rNow').checked=SIM.invNow;updSim()},
   simreset:()=>{SIM=null;render()},
   apply:()=>{S.set.pct=SIM.pct;S.set.cus=SIM.cus;S.set.resa=SIM.resa;const ds=SIM.spese-speseM(),now=SIM.invNow?Math.max(0,liq()-SIM.cus-upcoming(nowYM(),6)):0;if(Math.abs(ds)>=1)S.altre=Math.max(0,Math.round((+S.altre||0)+ds));save();SIM=null;render();toast(now>0?`Piano aggiornato. Ricordati di investire ${eu(now)} dal conto`:Math.abs(ds)>=1?'Piano aggiornato: ho corretto le altre spese':'Piano aggiornato')}};
