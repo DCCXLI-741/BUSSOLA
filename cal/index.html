@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Forma · Calendario</title>
+<style>
+:root{color-scheme:light dark;--bg:light-dark(#f2f2f7,#000);--card:light-dark(#fff,#1c1c1e);--ink:light-dark(#000,#fff);--mut:light-dark(#6c6c70,#98989f);--sep:light-dark(rgba(60,60,67,.18),rgba(84,84,88,.6));--acc:light-dark(#ff2d55,#ff375f);--fill:light-dark(#e5e5ea,#2c2c2e)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.4 -apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:480px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 28px) 16px 40px;text-align:center}
+svg{width:84px;height:84px}h1{font-size:28px;margin:12px 0 6px}p{margin:0}.mut{color:var(--mut)}
+ul{list-style:none;padding:0;margin:20px 0;background:var(--card);border-radius:16px;text-align:left;overflow:hidden}
+li{padding:12px 16px;display:flex;justify-content:space-between;gap:10px}li+li{border-top:.5px solid var(--sep)}li small{color:var(--mut);white-space:nowrap}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;border-radius:14px;background:var(--acc);color:#fff;font:600 17px -apple-system,system-ui,sans-serif;text-decoration:none;border:0;margin-top:12px;cursor:pointer}
+.btn.sec{background:var(--card);color:var(--acc)}.hint{font-size:13px;color:var(--mut);margin-top:10px}
+</style>
+</head>
+<body>
+<main>
+<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" fill="none" stroke="var(--fill)" stroke-width="12"/><circle cx="60" cy="60" r="50" fill="none" stroke="var(--acc)" stroke-width="12" stroke-linecap="round" stroke-dasharray="230 400" transform="rotate(-90 60 60)"/><circle cx="60" cy="60" r="32" fill="none" stroke="var(--fill)" stroke-width="12"/><circle cx="60" cy="60" r="32" fill="none" stroke="#34c759" stroke-width="12" stroke-linecap="round" stroke-dasharray="120 300" transform="rotate(-90 60 60)"/></svg>
+<h1>Calendario di iPhone</h1>
+<p class="mut" id="msg">Preparo gli allenamenti…</p>
+<ul id="list" hidden></ul>
+<a class="btn" id="go" href="#" hidden>Aggiungi al Calendario</a>
+<p class="hint" id="h1" hidden>Si apre l’anteprima: tocca <b>Aggiungi tutti</b>, poi torna a Forma.</p>
+<button class="btn sec" id="share" hidden>Non si apre? Condividi il file</button>
+</main>
+<script>
+{
+const $=s=>document.querySelector(s),d=location.hash.slice(1);let txt='';
+try{const b=atob(d.replace(/-/g,'+').replace(/_/g,'/'));txt=new TextDecoder().decode(Uint8Array.from(b,c=>c.charCodeAt(0)))}catch(e){}
+if(!/BEGIN:VCALENDAR/.test(txt)){$('#msg').textContent='Link non valido: riaprilo da Forma.'}
+else{
+ const raw=txt.replace(/\r\n /g,''),ev=[...raw.matchAll(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g)].map(m=>{const g=k=>(m[0].match(new RegExp('\\n'+k+'[^:]*:(.*)'))||[])[1]||'';const s=g('DTSTART');return{t:g('SUMMARY').replace(/\\,/g,',').replace(/^Forma · /,''),d:s?new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8),+s.slice(9,11),+s.slice(11,13)):null}});
+ const L=$('#list');L.innerHTML=ev.map(e=>`<li><span>${e.t.replace(/[<&]/g,'')}</span><small>${e.d?e.d.toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'})+' · '+e.d.toTimeString().slice(0,5):''}</small></li>`).join('');L.hidden=!ev.length;
+ $('#msg').textContent=ev.length===1?'1 allenamento da aggiungere':ev.length+' allenamenti da aggiungere';
+ const href='forma.ics?d='+d,go=$('#go');go.href=href;
+ const ready=()=>{go.hidden=false;$('#h1').hidden=false;$('#share').hidden=!navigator.share;if(!sessionStorage.getItem('done'+d.length)){sessionStorage.setItem('done'+d.length,'1');setTimeout(()=>{location.href=href},400)}};
+ if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(()=>navigator.serviceWorker.ready).then(ready).catch(()=>{go.href='data:text/calendar;charset=utf-8,'+encodeURIComponent(txt);go.hidden=false;$('#share').hidden=!navigator.share})}
+ else{go.href='data:text/calendar;charset=utf-8,'+encodeURIComponent(txt);go.hidden=false}
+ $('#share').onclick=async()=>{try{await navigator.share({files:[new File([txt],'forma-allenamenti.ics',{type:'text/calendar'})]})}catch(e){}};
+}
+}
+</script>
+</body>
+</html>
