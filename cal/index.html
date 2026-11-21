@@ -32,7 +32,7 @@ const $=s=>document.querySelector(s),d=location.hash.slice(1);let txt='';
 try{const b=atob(d.replace(/-/g,'+').replace(/_/g,'/'));txt=new TextDecoder().decode(Uint8Array.from(b,c=>c.charCodeAt(0)))}catch(e){}
 if(!/BEGIN:VCALENDAR/.test(txt)){$('#msg').textContent='Link non valido: riaprilo da Forma.'}
 else{
- const raw=txt.replace(/\r\n /g,''),ev=[...raw.matchAll(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g)].map(m=>{const g=k=>(m[0].match(new RegExp('\\n'+k+'[^:]*:(.*)'))||[])[1]||'';const s=g('DTSTART');return{t:g('SUMMARY').replace(/\\,/g,',').replace(/^Forma · /,''),d:s?new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8),+s.slice(9,11),+s.slice(11,13)):null}});
+ const raw=txt.replace(/\r\n /g,''),ev=[...raw.matchAll(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g)].map(m=>{const g=k=>(m[0].match(new RegExp('\\n'+k+'[^:]*:(.*)'))||[])[1]||'';const s=g('DTSTART');return{t:g('SUMMARY').replace(/\\,/g,',').replace(/^Forma · /,''),d:s?(/Z\s*$/.test(s)?new Date(Date.UTC(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8),+s.slice(9,11),+s.slice(11,13))):new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8),+s.slice(9,11),+s.slice(11,13))):null}});
  const L=$('#list');L.innerHTML=ev.map(e=>`<li><span>${e.t.replace(/[<&]/g,'')}</span><small>${e.d?e.d.toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'})+' · '+e.d.toTimeString().slice(0,5):''}</small></li>`).join('');L.hidden=!ev.length;
  $('#msg').textContent=ev.length===1?'1 allenamento da aggiungere':ev.length+' allenamenti da aggiungere';
  const href='forma.ics?d='+d,go=$('#go');go.href=href;

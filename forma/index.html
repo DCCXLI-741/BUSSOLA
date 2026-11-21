@@ -163,7 +163,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible,te
 <script>
 {
 /* ============ stato ============ */
-const VER='2.3',DAYS=['lun','mar','mer','gio','ven','sab','dom'],DLONG=['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'],DL=['L','M','M','G','V','S','D'],BYDAY=['MO','TU','WE','TH','FR','SA','SU'];
+const VER='2.3.1',DAYS=['lun','mar','mer','gio','ven','sab','dom'],DLONG=['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'],DL=['L','M','M','G','V','S','D'],BYDAY=['MO','TU','WE','TH','FR','SA','SU'];
 const KEY='forma1',KK='forma_key',MODEL='claude-sonnet-5-5';let S=null;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 const DEF=()=>({v:2,ts:0,profile:null,onb:[],program:null,progStart:'',sessions:[],weights:[],coach:[],daily:{},active:null,set:{ora:'18:00',avviso:30,per:7,suono:true},ui:{ex:'',rng:4,met:'n'}});
 S=Object.assign(DEF(),S||{});S.set=Object.assign({ora:'18:00',avviso:30,per:7,suono:true},S.set||{});S.ui=Object.assign({ex:'',rng:4,met:'n'},S.ui||{});S.daily=S.daily||{};
@@ -361,7 +361,8 @@ function render(){let h=location.hash.slice(1);if(h==='programma')h='profilo';co
  if(!S.badges&&S.profile)checkBadges(true);if(vk!==LASTV){v.classList.remove('enter');void v.offsetWidth;v.classList.add('enter');LASTV=vk;countUp(v)}else v.classList.remove('enter');
  MODX=0;POP='';if(k==='progressi'&&S.profile)progCharts();const c=$('#chat');if(c&&(k==='coach'||!S.profile))setTimeout(()=>scrollTo(0,document.body.scrollHeight),30);if(sheetFn)$('#sc').innerHTML=sheetFn()}
 /* ============ calendario di iPhone ============ */
-const icsT=d=>d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'T'+String(d.getHours()).padStart(2,'0')+String(d.getMinutes()).padStart(2,'0')+'00';
+/* orari in UTC (con la Z): il Calendario li mostra all'ora giusta nel fuso del telefono, anche se il calendario è impostato su un altro fuso */
+const icsT=d=>d.toISOString().replace(/[-:]/g,'').slice(0,15)+'Z';
 const ie=s=>String(s).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
 const fold=l=>{const o=[];while(l.length>72){o.push(l.slice(0,72));l=' '+l.slice(72)}o.push(l);return o.join('\r\n')};
 let CALX=new Set(),CALONE='';
